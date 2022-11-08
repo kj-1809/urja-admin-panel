@@ -1,11 +1,18 @@
 import "./App.css";
 import { Sidebar } from "./components/Sidebar";
+import {Card} from "./components/Card"
 
 function App() {
 	return (
 		<div className="rootContainer">
-      <Sidebar />
-			<div className="mainScreen"></div>
+			<div className = "sidebarContainer">
+				<Sidebar />
+			</div>
+      
+			<div className="mainScreen">
+				<Card />
+				<h1>Hey there</h1>
+			</div>
 		</div>
 	);
 }

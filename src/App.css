@@ -5,7 +5,9 @@
   display : flex;
   flex : 1;
 }
-.mainScreen {
+.sidebarContainer{
   display : flex;
-  flex : 1;
+}
+.mainScreen {
+  
 }

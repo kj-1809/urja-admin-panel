@@ -6,9 +6,9 @@ import "./Sidebar.css";
 export const Sidebar = () => {
 	return (
 		<div className="sidebar">
-			{/* <div className="imageContainer">
+			<div className="imageContainer">
 				<img src={require("../assets/urjalogo.png")} className="logoImage" />
-			</div> */}
+			</div>
 			<div className="sidebarItemsContainer">
 				<div className="sidebarItemContainer">
 					<BiHome />
