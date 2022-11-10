@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
+
+.container {
+  display: flex;
+  flex-direction: column; 
+}
+
+.cardContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  /* background-color: green; */
+  flex : 1;
+  justify-content: center;
+}
+.headingContainer{
+  display: flex;
+  justify-content: center;
+  font-family: 'Montserrat' , sans-serif;
+  font-size: 20px;
+}

@@ -4,7 +4,7 @@
   display : flex;
   position : fixed;
   left:0;
-  right : 0;
+  top : 0;
   height: 100vh;
   width: 220px;
   background-color: #060b26;
@@ -33,13 +33,13 @@
 
 .sidebarItemContainer:hover{
   background-color: #fe6f00;
-  
 }
 
 .sidebarItemText {
   font-size: 20px;
   margin-left: 15px;
 }
+
 .imageContainer{
   display : flex;
   align-items: center;
@@ -47,6 +47,7 @@
   padding: 30px;
   margin-top : 20px;
 }
+
 .logoImage {
   z-index : 1;
   width: 80px;
@@ -54,4 +55,5 @@
   object-fit: cover;
   border-radius: 40px;
 } 
+
 
