@@ -33,6 +33,7 @@
 
 .sidebarItemContainer:hover{
   background-color: #fe6f00;
+  transition-duration: 100ms;
 }
 
 .sidebarItemText {

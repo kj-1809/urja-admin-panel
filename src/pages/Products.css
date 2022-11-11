@@ -1,0 +1,22 @@
+.productsDataTable {
+  display: flex;
+	justify-content: center;
+	height: 650px;
+	margin: 5vh 4vw 0 4vw;
+}
+
+.MuiDataGrid-root .MuiDataGrid-cell{
+	white-space: normal !important;
+	word-wrap: break-word !important;
+}
+
+.editButton {
+	padding : 7px 14px;
+  background-color: white;
+  border : 2px solid rgba(0, 43, 128, 0.44);
+  border-radius: 5px;
+}
+
+.editButton:hover {
+	background-color: rgba(0, 43, 128, 0.1);
+}

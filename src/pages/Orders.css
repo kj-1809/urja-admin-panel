@@ -1,0 +1,33 @@
+.dataTableContainer{
+  display: flex;
+  justify-content: center;
+  height : 650px;
+  margin : 5vh 4vw 0 4vw;
+}
+
+.statusTag{
+  padding : 7px;
+  border-radius: 5px;
+}
+
+.statusTag.Fulfilled {
+  color: green;
+  background-color: rgba(0,128,0,0.151);
+}
+
+.statusTag.Pending {
+  color : goldenrod;
+  background-color: rgba(189 , 189 , 3 , 0.103);
+}
+
+.markButton {
+  padding : 7px;
+  background-color: white;
+  border : 2px solid rgba(0, 43, 128, 0.44);
+  border-radius: 5px;
+}
+
+.markButton:hover {
+  background-color: rgba(0, 43, 128, 0.1);
+}
+

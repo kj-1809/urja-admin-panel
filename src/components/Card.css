@@ -4,8 +4,9 @@
   font-family: 'Montserrat', sans-serif;
   padding : 20px;
   border-radius : 25px;
-  background-color: #CDFCF6;
+  background-color: #060b26f2;
   margin : 20px 10px;
   width : 20vw;
   box-shadow: 5px 5px 25px rgb(75, 73, 73);
+  color : white;
 }
