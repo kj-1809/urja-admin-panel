@@ -2,7 +2,9 @@ import React from "react";
 import {Card} from "../components/Card"
 import "./Home.css"
 
-export const Home = () => {
+import BasicTable from "../components/BasicTable"
+
+const Home = () => {
 	return (
 		<div className="container">
 			<div className="headingContainer">
@@ -13,6 +15,13 @@ export const Home = () => {
 				<Card title="Total Sales" value="38" />
 				<Card title="Total Orders" value="90" />
 			</div>
+
+			<div className="tableContainer">
+				<BasicTable />
+			</div>
+			
 		</div>
 	);
 };
+
+export default Home;

@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
+
+
+.tableTitle {
+  font-family: 'Montserrat' , sans-serif;
+}
+
+.statusTag{
+  padding : 7px;
+  border-radius: 5px;
+}
+
+.statusTag.Fulfilled {
+  color: green;
+  background-color: rgba(0,128,0,0.151);
+}
+
+.statusTag.Pending {
+  color : goldenrod;
+  background-color: rgba(189 , 189 , 3 , 0.103);
+}
+
+.cell {
+  font-family: 'Montserrat' , sans-serif;
+}
