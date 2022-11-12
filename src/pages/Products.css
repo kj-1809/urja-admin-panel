@@ -10,6 +10,17 @@
 	word-wrap: break-word !important;
 }
 
+.headingContainerProducts{
+	margin-left: 4vw;
+	margin-right: 4vw;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding : 0 10px 0 10px;
+	font-size: 20px;
+}
+
+
 .editButton {
 	padding : 7px 14px;
   background-color: white;
@@ -19,4 +30,14 @@
 
 .editButton:hover {
 	background-color: rgba(0, 43, 128, 0.1);
+}
+
+.addButton {
+	padding : 7px 14px;
+  background-color: white;
+  border : 2px solid rgba(19, 128, 0, 0.532);
+  border-radius: 5px;
+}
+.addButton:hover {
+	background-color: rgba(19, 128, 0, 0.1);
 }

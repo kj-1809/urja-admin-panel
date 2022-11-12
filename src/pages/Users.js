@@ -2,6 +2,7 @@ import React from "react";
 import "./Users.css";
 
 import { DataGrid } from "@mui/x-data-grid";
+import { Link } from "react-router-dom";
 
 const columns = [
 	{ field: "name", headerName: "Name", flex: 1 },
@@ -34,11 +35,11 @@ const columns = [
 		renderCell: (params) => {
 			return (
 				<div>
-					<button className = "editButton">
-						Edit
-					</button>
+					<Link to="/edituser">
+						<button className="editButton">Edit</button>
+					</Link>
 				</div>
-			)
+			);
 		},
 	},
 ];
@@ -58,11 +59,11 @@ const rows = [
 const Users = () => {
 	return (
 		<div className="container">
-			<div className="headingContainer">
+			<div className="headingContainerUsers">
 				<h1>Users</h1>
 			</div>
 
-			<div className = "usersDataTable">
+			<div className="usersDataTable">
 				<DataGrid
 					rows={rows}
 					columns={columns}

@@ -7,7 +7,7 @@ import BasicTable from "../components/BasicTable"
 const Home = () => {
 	return (
 		<div className="container">
-			<div className="headingContainer">
+			<div className="headingContainerDash">
 				<h1>Dashboard</h1>
 			</div>
 			<div className="cardContainer">

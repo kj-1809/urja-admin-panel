@@ -2,6 +2,7 @@ import React from "react";
 import "./Products.css";
 
 import { DataGrid } from "@mui/x-data-grid";
+import { Link } from "react-router-dom";
 
 const columns = [
 	{ field: "productId", headerName: "Product ID", flex: 1 },
@@ -19,11 +20,11 @@ const columns = [
 		renderCell: (params) => {
 			return (
 				<div>
-					<button className = "editButton">
-						Edit
-					</button>
+					<Link to="/editproduct">
+						<button className="editButton">Edit</button>
+					</Link>
 				</div>
-			)
+			);
 		},
 	},
 ];
@@ -43,8 +44,15 @@ const rows = [
 const Products = () => {
 	return (
 		<div className="container">
-			<div className="headingContainer">
-				<h1>Products</h1>
+			<div className="headingContainerProducts">
+				<div className="titleContainer">
+					<h1>Products</h1>
+				</div>
+				<div className="addProductButtonContainer">
+					<Link to="/addproduct">
+						<button className="addButton">Add Product</button>
+					</Link>
+				</div>
 			</div>
 			<div className="productsDataTable">
 				<DataGrid

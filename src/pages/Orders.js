@@ -63,7 +63,7 @@ const rows = [
 const Orders = () => {
 	return (
 		<div className="container">
-			<div className="headingContainer">
+			<div className="headingContainerOrders">
 				<h1>Orders</h1>
 			</div>
 			<div className="dataTableContainer">
