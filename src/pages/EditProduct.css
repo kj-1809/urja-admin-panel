@@ -1,3 +1,22 @@
 .editProductContainer{
   margin : 10px;
 }
+
+.buttonContainerEditProduct {
+  margin-top: 30vh;
+  display: flex;
+  justify-content: space-between;
+}
+
+.deleteProductButton {
+  margin-top: 20px;
+  padding : 10px;
+  border-radius: 10px;
+  background-color: white;
+  border : 2px solid rgba(255, 0, 0, 0.806);
+  width: 120px;
+}
+
+.deleteProductButton:hover{
+  background-color: rgba(255, 0, 0, 0.1);
+}

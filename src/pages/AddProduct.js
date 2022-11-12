@@ -17,7 +17,7 @@ const AddProduct = () => {
 					<TextInput placeholder="Discount" />
 				</form>
 			</div>
-			<div className = "buttonContainer">
+			<div className = "buttonContainerAddProduct">
 				<button className="uploadImageButton">Upload Image</button>
 				<button className="submitButton">Submit</button>
 			</div>

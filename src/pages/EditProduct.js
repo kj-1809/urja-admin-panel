@@ -1,6 +1,6 @@
 import React from "react";
 import "./EditProduct.css";
-import TextInput from "../components/TextInput"
+import TextInput from "../components/TextInput";
 
 const EditProduct = () => {
 	return (
@@ -15,11 +15,12 @@ const EditProduct = () => {
 					<TextInput placeholder="Product Name" />
 					<TextInput placeholder="Price" />
 					<TextInput placeholder="Discount" />
+					<button className="uploadImageButton">Upload Image</button>
 				</form>
 			</div>
-			<div className="buttonContainer">
-				<button className="uploadImageButton">Upload Image</button>
+			<div className="buttonContainerEditProduct">
 				<button className="submitButton">Update</button>
+				<button className="deleteProductButton">Delete</button>
 			</div>
 		</div>
 	);
