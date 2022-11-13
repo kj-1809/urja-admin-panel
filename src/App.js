@@ -10,24 +10,18 @@ import EditUser from "./pages/EditUser";
 import Login from "./pages/Login";
 import Layout from "./components/Layout";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { auth,db } from "./firebase";
-import { onAuthStateChanged } from "firebase/auth";
-import { collection, query, where, getDocs } from "firebase/firestore";
-
-import {useAuth , useUpdateAuth} from "./context/AuthContext"
+import {useAuth} from "./context/AuthContext"
 
 function App() {
-	const currentState = useAuth()
-	// const updateCurrentState = useUpdateAuth()
+	const isAdmin = useAuth()
 
-	console.log("currentState :: " , currentState)
+	console.log("isAdmin :: " , isAdmin)
 
 	function RequireAuth(props) {
-		return currentState ? props.children : <Navigate to="/login" />;
+		return isAdmin ? props.children : <Navigate to="/login" />;
 	}
 	function RequireAuthRev(props) {
-		return !currentState ? props.children : <Navigate to="/" />;
+		return !isAdmin ? props.children : <Navigate to="/" />;
 	}
 
 	return (

@@ -1,4 +1,4 @@
-import React , {useContext , useState , createContext} from 'react'
+import React , {useContext , useState , createContext, useEffect} from 'react'
 
 const AuthContext = createContext()
 const AuthUpdateContext = createContext()
@@ -11,8 +11,20 @@ export function useUpdateAuth(){
 }
 
 export function AuthProvider({children}){
-  const [isAdmin , setIsAdmin] = useState(false)
+
+  let cachedValue = localStorage.getItem("isAdmin")
+  if(!cachedValue){
+      cachedValue = false
+  }else{
+    cachedValue = (cachedValue === 'true')
+  }
+
+  const [isAdmin , setIsAdmin] = useState(cachedValue)
   
+  useEffect(()=>{
+    localStorage.setItem("isAdmin" , isAdmin)
+  } , [isAdmin])
+
   function changeAuthState(currentAuthState){
     setIsAdmin(currentAuthState)
   }

@@ -13,27 +13,23 @@ const Login = (props) => {
 	// const [currentUser , setCurrentUser] = useState(null)
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [isAdmin, setIsAdmin] = useState(false);
-	const navigate = useNavigate();
 
-	const currentStatus = useAuth()
-	const updateCurrentStatus = useUpdateAuth()
-
-	useEffect(()=>{
-		if(currentStatus){
-			console.log("Rec")
-			navigate('/')
-		}
-	} , [currentStatus])
+	const updateIsAdmin = useUpdateAuth()
 
 	async function fetchUserData(userId) {
 		const q = query(collection(db, "users"), where("uid", "==", userId));
 		const querySnapshot = await getDocs(q);
 		console.log("Data fetched successfully");
+		if(querySnapshot.size == 0){
+			alert("incorrect id or pass")
+		}
 		querySnapshot.forEach((doc) => {
 			// doc.data() is never undefined for query doc snapshots
 			console.log("isAdmin" , doc.data().isAdmin)
-			updateCurrentStatus(doc.data().isAdmin)
+			if(!doc.data().admin){
+				console.log("incorrect id or pass")
+			}
+			updateIsAdmin(doc.data().isAdmin)
 		});
 	}
 	const handleSubmit = () => {
