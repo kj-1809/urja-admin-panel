@@ -15,38 +15,19 @@ import { auth,db } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, query, where, getDocs } from "firebase/firestore";
 
+import {useAuth , useUpdateAuth} from "./context/AuthContext"
+
 function App() {
-//	top G comment
-	const [currentUser, setCurrentUser] = useState(null);
-	const [isAdmin , setIsAdmin] = useState(false)
+	const currentState = useAuth()
+	// const updateCurrentState = useUpdateAuth()
 
-	async function fetchUserData(userId) {
-		const q = query(collection(db, "users"), where("uid", "==", userId));
-		const querySnapshot = await getDocs(q);
-		console.log("Data fetched successfully in App.js");
-		await querySnapshot.forEach((doc) => {
-			// doc.data() is never undefined for query doc snapshots
-			console.log(doc.id, " => ", doc.data());
-			setIsAdmin(doc.data().isAdmin);
-		});
-	}
-
-	onAuthStateChanged(auth, (user) => {
-		if (user) {
-			const uid = user.uid;
-			console.log(currentUser);
-			fetchUserData(user.uid);
-		} else {
-			setCurrentUser(null);
-			console.log("currentUser", currentUser);
-		}
-	});
+	console.log("currentState :: " , currentState)
 
 	function RequireAuth(props) {
-		return currentUser ? props.children : <Navigate to="/login" />;
+		return currentState ? props.children : <Navigate to="/login" />;
 	}
 	function RequireAuthRev(props) {
-		return !currentUser ? props.children : <Navigate to="/" />;
+		return !currentState ? props.children : <Navigate to="/" />;
 	}
 
 	return (
