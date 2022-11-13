@@ -9,18 +9,6 @@
   flex : 1;
 }
 
-.sidebarContainer {
-  display : flex;
-}
-
-.mainScreen {
-  display: flex;
-  flex : 1;
-  margin : 10px 10px 10px 230px;
-  flex-direction: column;
-  /* background-color : aqua; */
-}
-
 
 
 

@@ -1,0 +1,9 @@
+.customButtonStyle {
+	padding: 7px 14px;
+	background-color: white;
+	border: 2px solid rgba(19, 128, 0, 0.532);
+	border-radius: 5px;
+}
+.customButtonStyle:hover {
+	background-color: rgba(19, 128, 0, 0.1);
+}
