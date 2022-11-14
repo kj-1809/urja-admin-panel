@@ -1,7 +1,36 @@
-import React from "react";
+import React  , {useState , useEffect } from "react";
 import "./EditUser.css";
-import TextInput from "../components/TextInput"
+import TextInput from "../components/TextInput";
+import { useParams } from "react-router-dom";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
+
 const EditUser = () => {
+	const { id } = useParams();
+	console.log("id : ", id);
+
+	const [userData , setUserData] = useState({})
+
+	async function fetchUserData(id) {
+		const q = query(
+			collection(db, "users"),
+			where("uid", "==", id)
+		);
+		const querySnapshot = await getDocs(q);
+		console.log("size : ", querySnapshot.size);
+		querySnapshot.forEach((doc) => {
+			// doc.data() is never undefined for query doc snapshots
+			setUserData(doc.data());
+		});
+	}
+
+	useEffect(() => {
+		fetchUserData(id);
+	}, []);
+
+	console.log("User Data : ");
+	console.log(userData);
+
 	return (
 		<div className="editUserContainer">
 			<div className="headingContainerEditUser">

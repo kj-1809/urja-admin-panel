@@ -10,12 +10,12 @@ import EditUser from "./pages/EditUser";
 import Login from "./pages/Login";
 import Layout from "./components/Layout";
 import { Routes, Route, Navigate } from "react-router-dom";
-import {useAuth} from "./context/AuthContext"
+import { useAuth } from "./context/AuthContext";
 
 function App() {
-	const isAdmin = useAuth()
+	const isAdmin = useAuth();
 
-	console.log("isAdmin :: " , isAdmin)
+	console.log("isAdmin :: ", isAdmin);
 
 	function RequireAuth(props) {
 		return isAdmin ? props.children : <Navigate to="/login" />;
@@ -61,6 +61,14 @@ function App() {
 						}
 					/>
 					<Route
+						path="/products/:id"
+						element={
+							<RequireAuth>
+								<EditProduct />
+							</RequireAuth>
+						}
+					/>
+					<Route
 						path="/users"
 						element={
 							<RequireAuth>
@@ -69,26 +77,18 @@ function App() {
 						}
 					/>
 					<Route
+						path="/users/:id"
+						element={
+							<RequireAuth>
+								<EditUser />
+							</RequireAuth>
+						}
+					/>
+					<Route
 						path="/addproduct"
 						element={
 							<RequireAuth>
 								<AddProduct />
-							</RequireAuth>
-						}
-					/>
-					<Route
-						path="/editproduct"
-						element={
-							<RequireAuth>
-								<EditProduct />
-							</RequireAuth>
-						}
-					/>
-					<Route
-						path="/edituser"
-						element={
-							<RequireAuth>
-								<EditUser />
 							</RequireAuth>
 						}
 					/>

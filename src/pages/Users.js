@@ -1,30 +1,32 @@
-import React from "react";
+import React  , {useState , useEffect} from "react";
 import "./Users.css";
 
 import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
 
 const columns = [
 	{ field: "name", headerName: "Name", flex: 1 },
 	{ field: "phone", headerName: "Phone", flex: 1 },
 	{ field: "gstin", headerName: "GSTIN", flex: 2 },
 	{
-		field: "discount5",
+		field: "disc5",
 		headerName: "Discount 5KG",
 		flex: 1.1,
 	},
 	{
-		field: "discount19",
+		field: "disc19",
 		headerName: "Discount 19KG",
 		flex: 1.2,
 	},
 	{
-		field: "discount47",
+		field: "disc47",
 		headerName: "Discount 47KG",
 		flex: 1.2,
 	},
 	{
-		field: "discount430",
+		field: "disc430",
 		headerName: "Discount 430KG",
 		flex: 1.2,
 	},
@@ -35,7 +37,7 @@ const columns = [
 		renderCell: (params) => {
 			return (
 				<div>
-					<Link to="/edituser">
+					<Link to={`/users/${params.row.uid}`}>
 						<button className="editButton">Edit</button>
 					</Link>
 				</div>
@@ -44,19 +46,26 @@ const columns = [
 	},
 ];
 
-const rows = [
-	{ id: 1, productName: "Snow", firstName: "Jon", age: 35 },
-	{ id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-	{ id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-	{ id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-	{ id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-	{ id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-	{ id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-	{ id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-	{ id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-];
 
 const Users = () => {
+	const [users, setUsers] = useState([]);
+
+	async function fetchUsers() {
+		const querySnapshot = await getDocs(collection(db, "users"));
+		let arr = [];
+		querySnapshot.forEach((doc) => {
+			// doc.data() is never undefined for query doc snapshots
+			console.log("user : ");
+			console.log(doc.id, " => ", doc.data());
+			arr.push(doc.data());
+		});
+		setUsers(arr);
+	}
+
+	useEffect(() => {
+		fetchUsers();
+	}, []);
+
 	return (
 		<div className="container">
 			<div className="headingContainerUsers">
@@ -65,10 +74,11 @@ const Users = () => {
 
 			<div className="usersDataTable">
 				<DataGrid
-					rows={rows}
+					rows={users}
 					columns={columns}
 					pageSize={10}
 					rowsPerPageOptions={[10]}
+					getRowId = {(row) => row.uid}
 				/>
 			</div>
 		</div>

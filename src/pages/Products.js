@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Products.css";
-
 import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 const columns = [
 	{ field: "productId", headerName: "Product ID", flex: 1 },
@@ -20,7 +22,7 @@ const columns = [
 		renderCell: (params) => {
 			return (
 				<div>
-					<Link to="/editproduct">
+					<Link to={`/products/${params.row.productId}`}>
 						<button className="editButton">Edit</button>
 					</Link>
 				</div>
@@ -28,20 +30,25 @@ const columns = [
 		},
 	},
 ];
-
-const rows = [
-	{ id: 1, productName: "Snow", firstName: "Jon", age: 35 },
-	{ id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-	{ id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-	{ id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-	{ id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-	{ id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-	{ id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-	{ id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-	{ id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-];
-
 const Products = () => {
+	const [products, setProducts] = useState([]);
+
+	async function fetchProducts() {
+		const querySnapshot = await getDocs(collection(db, "products"));
+		let arr = [];
+		querySnapshot.forEach((doc) => {
+			// doc.data() is never undefined for query doc snapshots
+			console.log("product : ");
+			console.log(doc.id, " => ", doc.data());
+			arr.push(doc.data());
+		});
+		setProducts(arr);
+	}
+
+	useEffect(() => {
+		fetchProducts();
+	}, []);
+
 	return (
 		<div className="container">
 			<div className="headingContainerProducts">
@@ -56,10 +63,11 @@ const Products = () => {
 			</div>
 			<div className="productsDataTable">
 				<DataGrid
-					rows={rows}
+					rows={products}
 					columns={columns}
 					pageSize={10}
 					rowsPerPageOptions={[10]}
+					getRowId={(row) => row.productId}
 				/>
 			</div>
 		</div>
