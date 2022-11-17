@@ -2,14 +2,16 @@ import React, { useState, useEffect } from "react";
 import "./EditUser.css";
 import TextInput from "../components/TextInput";
 import { useParams } from "react-router-dom";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs,  doc , updateDoc} from "firebase/firestore";
 import { db } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 const EditUser = () => {
 	const { id } = useParams();
 	console.log("id : ", id);
-
+	const navigate = useNavigate()
 	const [userData, setUserData] = useState({});
+	const [docId , setDocId] = useState("");
 	const [name, setName] = useState("");
 	const [phone, setPhone] = useState("");
 	const [gstin, setGstin] = useState("");
@@ -21,6 +23,23 @@ const EditUser = () => {
 	const [discount19kg, setDiscount19kg] = useState(0);
 	const [discount430kg, setDiscount430kg] = useState(0);
 
+	async function handleSubmit(){
+		await updateDoc(doc(db, "users", docId), {
+			name: name,
+			phone: phone,
+			gstin: gstin,
+			email: email,
+			uid: userId,
+			address: address,
+			disc5: discount5kg,
+			disc47: discount47kg,
+			disc19: discount19kg,
+			disc430: discount430kg,
+		});
+		console.log("User Update successful")
+		navigate('/users')
+	}
+
 	async function fetchUserData(id) {
 		const q = query(collection(db, "users"), where("uid", "==", id));
 		const querySnapshot = await getDocs(q);
@@ -28,6 +47,7 @@ const EditUser = () => {
 		querySnapshot.forEach((doc) => {
 			// doc.data() is never undefined for query doc snapshots
 			setUserData(doc.data());
+			setDocId(doc.id)
 		});
 	}
 
@@ -112,7 +132,7 @@ const EditUser = () => {
 				</form>
 			</div>
 			<div className="buttonContainerEditUser">
-				<button className="submitButton">Submit</button>
+				<button className="submitButton" onClick={handleSubmit}>Submit</button>
 				<button className="deleteUserButton">Delete User</button>
 			</div>
 		</div>
