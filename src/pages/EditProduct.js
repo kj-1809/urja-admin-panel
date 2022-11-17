@@ -9,6 +9,7 @@ import {
 	getDocs,
 	updateDoc,
 	doc,
+	deleteDoc
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
@@ -24,8 +25,13 @@ const EditProduct = () => {
 	const [discount, setDiscount] = useState(0);
 	const [docId , setDocId] = useState("");
 
+	async function handleDelete(){
 
-
+		console.log("TRIGGER deleted")
+		await deleteDoc(doc(db ,"products" , docId))
+		console.log("Successfully deleted")
+		navigate("/products")
+	}
 
 	async function handleSubmit() {
 		await updateDoc(doc(db, "products", docId), {
@@ -100,7 +106,7 @@ const EditProduct = () => {
 				<button className="submitButton" onClick={handleSubmit}>
 					Update
 				</button>
-				<button className="deleteProductButton">Delete</button>
+				<button className="deleteProductButton" onClick = {handleDelete}>Delete</button>
 			</div>
 		</div>
 	);

@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
 	
-	const [productId, setProductId] = useState("");
+	const [productId, setProductId] = useState(0);
 	const [productName, setProductName] = useState("");
 	const [price, setPrice] = useState(0);
 	const [discount, setDiscount] = useState(0);
@@ -19,7 +19,7 @@ const AddProduct = () => {
 	
 	async function handleSubmit(){
 		const docRef = await addDoc(collection(db, "products"), {
-			productId: productId,
+			productId: Number(productId),
 			productName: productName,
 			price: price,
 			discount: discount,

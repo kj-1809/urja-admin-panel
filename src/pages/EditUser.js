@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import "./EditUser.css";
 import TextInput from "../components/TextInput";
 import { useParams } from "react-router-dom";
-import { collection, query, where, getDocs,  doc , updateDoc} from "firebase/firestore";
-import { db } from "../firebase";
+import { collection, query, where, getDocs,  doc , updateDoc , deleteDoc} from "firebase/firestore";
+import { db,auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
+
 
 const EditUser = () => {
 	const { id } = useParams();
@@ -22,6 +23,11 @@ const EditUser = () => {
 	const [discount47kg, setDiscount47kg] = useState(0);
 	const [discount19kg, setDiscount19kg] = useState(0);
 	const [discount430kg, setDiscount430kg] = useState(0);
+
+	async function handleDelete(){
+		await deleteDoc(doc(db,"users",docId))
+		console.log("user Deleted successfully")
+	}
 
 	async function handleSubmit(){
 		await updateDoc(doc(db, "users", docId), {
@@ -133,7 +139,7 @@ const EditUser = () => {
 			</div>
 			<div className="buttonContainerEditUser">
 				<button className="submitButton" onClick={handleSubmit}>Submit</button>
-				<button className="deleteUserButton">Delete User</button>
+				<button className="deleteUserButton" onClick = {handleDelete}>Delete User</button>
 			</div>
 		</div>
 	);
