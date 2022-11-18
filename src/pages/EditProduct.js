@@ -9,10 +9,13 @@ import {
 	getDocs,
 	updateDoc,
 	doc,
-	deleteDoc
+	deleteDoc,
 } from "firebase/firestore";
-import { db } from "../firebase";
+import { db, storage } from "../firebase";
 import { useNavigate } from "react-router-dom";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+
+import { v4 } from "uuid";
 
 const EditProduct = () => {
 	const { id } = useParams();
@@ -23,14 +26,37 @@ const EditProduct = () => {
 	const [productName, setProductName] = useState("");
 	const [price, setPrice] = useState(0);
 	const [discount, setDiscount] = useState(0);
-	const [docId , setDocId] = useState("");
+	const [currentImg, setCurrentImg] = useState("");
+	const [uploadFile, setUploadFile] = useState(null);
+	const [imgUrl, setImgUrl] = useState("");
+	const [docId, setDocId] = useState("");
+	const [uploadSuccessful, setUploadSuccessful] = useState(false);
 
-	async function handleDelete(){
+	async function handleDelete() {
+		console.log("TRIGGER deleted");
+		await deleteDoc(doc(db, "products", docId));
+		console.log("Successfully deleted");
+		navigate("/products");
+	}
 
-		console.log("TRIGGER deleted")
-		await deleteDoc(doc(db ,"products" , docId))
-		console.log("Successfully deleted")
-		navigate("/products")
+	function handleUpload() {
+		if (uploadFile == null) {
+			alert("Please select an image to upload");
+			return;
+		}
+		console.log("begun");
+		const imgRef = ref(storage, `images/${uploadFile.name + v4()}`);
+		uploadBytes(imgRef, uploadFile)
+			.then((snapshot) => {
+				getDownloadURL(snapshot.ref).then((url) => {
+					setImgUrl(url);
+					console.log("uploaded image");
+					setUploadSuccessful(true);
+				});
+			})
+			.catch((error) => {
+				console.log("Error occured : ", error);
+			});
 	}
 
 	async function handleSubmit() {
@@ -39,9 +65,10 @@ const EditProduct = () => {
 			productName: productName,
 			price: price,
 			discount: discount,
+			img: imgUrl,
 		});
-		console.log("Product Update successful")
-		navigate('/products')
+		console.log("Product Update successful");
+		navigate("/products");
 	}
 
 	async function fetchProductData(id) {
@@ -53,7 +80,7 @@ const EditProduct = () => {
 		console.log("size : ", querySnapshot.size);
 		querySnapshot.forEach((doc) => {
 			// doc.data() is never undefined for query doc snapshots
-			setDocId(doc.id)
+			setDocId(doc.id);
 			setProductData(doc.data());
 		});
 	}
@@ -67,6 +94,7 @@ const EditProduct = () => {
 		setProductName(productData.productName);
 		setPrice(productData.price);
 		setDiscount(productData.discount);
+		setCurrentImg(productData.img);
 	}, [productData]);
 
 	console.log(productName);
@@ -99,14 +127,34 @@ const EditProduct = () => {
 						value={discount}
 						onChange={(e) => setDiscount(e.target.value)}
 					/>
-					<button className="uploadImageButton">Upload Image</button>
 				</form>
 			</div>
+
+
+			<div className="imageInputContainer">
+				<img src={currentImg} alt="current-image" className="currentImage" />
+				<input
+					className = "inputStyle"
+					type="file"
+					onChange={(e) => setUploadFile(e.target.files[0])}
+					accept="image/jpeg , image/png"
+				/>
+				<button className="uploadImageButton" onClick={handleUpload}>
+					Upload Image
+				</button>
+				<span hidden={!uploadSuccessful} className="successMarker">
+					✅ Upload successful !
+				</span>
+			</div>
+
+
 			<div className="buttonContainerEditProduct">
 				<button className="submitButton" onClick={handleSubmit}>
 					Update
 				</button>
-				<button className="deleteProductButton" onClick = {handleDelete}>Delete</button>
+				<button className="deleteProductButton" onClick={handleDelete}>
+					Delete
+				</button>
 			</div>
 		</div>
 	);

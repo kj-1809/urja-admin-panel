@@ -3,10 +3,11 @@ import "./AddProduct.css";
 import TextInput from "../components/TextInput";
 import { collection, addDoc } from "firebase/firestore"; 
 import {useState} from 'react'
-import {db} from "../firebase"
+import {db , storage} from "../firebase"
 import { useNavigate } from "react-router-dom";
+import {getDownloadURL, ref, uploadBytes} from "firebase/storage"
 
-
+import {v4} from "uuid"
 
 const AddProduct = () => {
 	
@@ -14,6 +15,9 @@ const AddProduct = () => {
 	const [productName, setProductName] = useState("");
 	const [price, setPrice] = useState(0);
 	const [discount, setDiscount] = useState(0);
+	const [imgUrl , setImgUrl] = useState("");
+	const [uploadFile, setUploadFile] = useState(null);
+	const [uploadSuccessful , setUploadSuccessful] = useState(false);
 	const navigate = useNavigate()
 
 	
@@ -23,10 +27,28 @@ const AddProduct = () => {
 			productName: productName,
 			price: price,
 			discount: discount,
-			img : "",
+			img : imgUrl,
 		});
 		console.log("Document written with ID: ", docRef.id);
 		navigate('/products')
+	}
+
+	function handleUpload(){
+		//set loading to true
+		if(uploadFile == null){
+			alert("Please select an image to upload")
+			return;
+		}
+		const imgRef = ref(storage , `images/${uploadFile.name + v4()}`)
+		uploadBytes(imgRef , uploadFile).then((snapshot)=>{
+			getDownloadURL(snapshot.ref).then((url)=>{
+				setImgUrl(url)
+				console.log("uploaded image")
+				setUploadSuccessful(true)
+			})
+		}).catch((error)=>{
+			console.log("Error occured : " , error)
+		})
 	}
 
 	return (
@@ -37,14 +59,17 @@ const AddProduct = () => {
 
 			<div>
 				<form>
-					<TextInput placeholder="Product ID" value = {productId} onChange = {(e) => setProductId(e.target.value)}/>
+					<TextInput placeholder="Product ID" value = {productId == 0 ? "" : productId} onChange = {(e) => setProductId(e.target.value)}/>
 					<TextInput placeholder="Product Name" value = {productName} onChange = {(e) => setProductName(e.target.value)}/>
 					<TextInput placeholder="Price" value = {price} onChange = {(e) => setPrice(e.target.value)}/>
 					<TextInput placeholder="Discount" value = {discount} onChange = {(e) => setDiscount(e.target.value)}/>
 				</form>
 			</div>
 			<div className = "buttonContainerAddProduct">
-				<button className="uploadImageButton">Upload Image</button>
+				<input className = "imageSelector" type = "file" onChange={(e) => setUploadFile(e.target.files[0])}
+				accept = "image/jpeg , image/png"/>
+				<button className="uploadImageButton" onClick={handleUpload}>Upload Image</button>
+				<span hidden = {!uploadSuccessful} className = "successMarker">✅ Upload successful !</span>
 				<button className="submitButton" onClick={handleSubmit}>Submit</button>
 			</div>
 		</div>

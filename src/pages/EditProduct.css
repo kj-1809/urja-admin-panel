@@ -3,7 +3,7 @@
 }
 
 .buttonContainerEditProduct {
-  margin-top: 30vh;
+  margin-top: 10vh;
   display: flex;
   justify-content: space-between;
 }
@@ -19,4 +19,26 @@
 
 .deleteProductButton:hover{
   background-color: rgba(255, 0, 0, 0.1);
+}
+.successMarker {
+  margin-top: 10px;
+}
+.currentImage {
+  width : 150px;
+  height : 150px;
+  object-fit: cover;
+  margin-top: 20px;
+  border: 2px solid black;
+  border-radius: 50%;
+}
+.imageInputContainer{
+  display: flex;
+  flex-direction: column;
+  /* background-color: green; */
+}
+/* .uploadFileStyle{
+  margin-top : 20px;
+} */
+.inputStyle{
+  margin-top : 30px;
 }

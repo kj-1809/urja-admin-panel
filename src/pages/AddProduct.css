@@ -36,4 +36,12 @@
 .uploadImageButton:hover {
   background-color: rgba(19,128,0,0.1)
 }
-
+/* .imageSelector{
+  background-color: white;
+  border : 2px solid black;
+  border-radius: 5px;
+  padding : 10px;
+} */
+.successMarker {
+  margin-top: 10px;
+}
