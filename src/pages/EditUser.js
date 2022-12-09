@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./EditUser.css";
 import TextInput from "../components/TextInput";
+import TextInputMod from "../components/TextInputMod"
 import { useParams } from "react-router-dom";
 import { collection, query, where, getDocs,  doc , updateDoc , deleteDoc} from "firebase/firestore";
 import { db,auth } from "../firebase";
@@ -85,52 +86,52 @@ const EditUser = () => {
 
 			<div>
 				<form>
-					<TextInput
+					<TextInputMod
 						placeholder="Name"
 						value={name}
 						onChange={(e) => setName(e.target.value)}
 					/>
-					<TextInput
+					<TextInputMod
 						placeholder="Phone"
 						value={phone}
 						onChange={(e) => setPhone(e.target.value)}
 					/>
-					<TextInput
+					<TextInputMod
 						placeholder="GSTIN"
 						value={gstin}
 						onChange={(e) => setGstin(e.target.value)}
 					/>
-					<TextInput
+					<TextInputMod
 						placeholder="Email"
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
 					/>
-					<TextInput
+					<TextInputMod
 						placeholder="UserID"
 						value={userId}
 						onChange={(e) => setUserId(e.target.value)}
 					/>
-					<TextInput
+					<TextInputMod
 						placeholder="Address"
 						value={address}
 						onChange={(e) => setAddress(e.target.value)}
 					/>
-					<TextInput
+					<TextInputMod
 						placeholder="Discount 5KG"
 						value={discount5kg}
 						onChange={(e) => setDiscount5kg(e.target.value)}
 					/>
-					<TextInput
+					<TextInputMod
 						placeholder="Discount 19KG"
 						value={discount19kg}
 						onChange={(e) => setDiscount19kg(e.target.value)}
 					/>
-					<TextInput
+					<TextInputMod
 						placeholder="Discount 47KG"
 						value={discount47kg}
 						onChange={(e) => setDiscount47kg(e.target.value)}
 					/>
-					<TextInput
+					<TextInputMod
 						placeholder="Discount 430KG"
 						value={discount430kg}
 						onChange={(e) => setDiscount430kg(e.target.value)}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./EditProduct.css";
 import TextInput from "../components/TextInput";
+import TextInputMod from "../components/TextInputMod";
 import { Navigate, useParams } from "react-router-dom";
 import {
 	collection,
@@ -107,22 +108,22 @@ const EditProduct = () => {
 
 			<div>
 				<form>
-					<TextInput
+					<TextInputMod
 						placeholder="Product ID"
 						value={productId}
 						onChange={(e) => setProductId(e.target.value)}
 					/>
-					<TextInput
+					<TextInputMod
 						placeholder="Product Name"
 						value={productName}
 						onChange={(e) => setProductName(e.target.value)}
 					/>
-					<TextInput
+					<TextInputMod
 						placeholder="Price"
 						value={price}
 						onChange={(e) => setPrice(e.target.value)}
 					/>
-					<TextInput
+					<TextInputMod
 						placeholder="Discount"
 						value={discount}
 						onChange={(e) => setDiscount(e.target.value)}

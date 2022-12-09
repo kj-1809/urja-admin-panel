@@ -1,0 +1,27 @@
+
+.inputFieldContainer{
+  display: flex;
+  align-items: center;
+}
+
+.inputField{
+  padding : 10px;
+  margin : 15px 0px;
+  border-radius: 10px;
+  width : 400px;
+  border: 2px solid black;
+  margin-left: 15px;
+  box-shadow: 1px 1px 5px rgb(75, 73, 73);
+}
+
+.inputLabelComponent{
+  display: flex;
+  flex : 1;
+}
+
+.inputFieldComponent {
+  display: flex;
+  flex : 4
+}
+
+
