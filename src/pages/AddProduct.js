@@ -15,6 +15,7 @@ const AddProduct = () => {
 	const [productName, setProductName] = useState("");
 	const [price, setPrice] = useState(0);
 	const [discount, setDiscount] = useState(0);
+	const [quantity , setQuantity] = useState(0);
 	const [imgUrl, setImgUrl] = useState("");
 	const [uploadFile, setUploadFile] = useState(null);
 	const [uploadSuccessful, setUploadSuccessful] = useState(false);
@@ -27,6 +28,7 @@ const AddProduct = () => {
 			price: price,
 			discount: discount,
 			img: imgUrl,
+			quantity : quantity
 		});
 		console.log("Document written with ID: ", docRef.id);
 		navigate("/products");
@@ -79,6 +81,11 @@ const AddProduct = () => {
 						placeholder="Discount"
 						value={discount}
 						onChange={(e) => setDiscount(e.target.value)}
+					/>
+					<TextInputMod
+						placeholder="Inventory"
+						value={quantity}
+						onChange={(e) => setQuantity(e.target.value)}
 					/>
 				</form>
 			</div>

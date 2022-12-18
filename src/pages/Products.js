@@ -16,6 +16,11 @@ const columns = [
 		flex: 1,
 	},
 	{
+		field: "quantity",
+		headerName: "Inventory",
+		flex: 1,
+	},
+	{
 		field: "actions",
 		headerName: "Actions",
 		flex: 0.8,

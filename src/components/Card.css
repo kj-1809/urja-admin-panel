@@ -10,3 +10,11 @@
   box-shadow: 5px 5px 25px rgb(75, 73, 73);
   color : white;
 }
+
+.red {
+  color : rgb(195, 53, 53)
+}
+
+.green {
+  color : rgb(69, 185, 69)
+}
