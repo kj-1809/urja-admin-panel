@@ -14,7 +14,7 @@ import { db } from "../firebase";
 const Orders = () => {
 	const [orders, setOrders] = useState([]);
 	const [reload, setReload] = useState(false);
-	const [currentStatus , setCurrentStatus] = useState(false);
+	const [currentStatus, setCurrentStatus] = useState(false);
 
 	const columns = [
 		{
@@ -24,8 +24,17 @@ const Orders = () => {
 			renderCell: (params) => {
 				const seconds = params.row.createdAt.seconds;
 				const currentTime = new Date(seconds * 1000);
-
-				return <span>{currentTime.toString().slice(4, 25)}</span>;
+				console.log(currentTime.toLocaleString());
+				// currentTime.toString().slice(4, 25)
+				const options = {
+					year: "numeric",
+					month: "short",
+					day: "numeric",
+					hour : "numeric",
+					minute : "numeric",
+					second : "numeric",
+				};
+				return <span>{currentTime.toLocaleString("en-GB", options)}</span>;
 			},
 		},
 		{ field: "orderId", headerName: "Order ID", flex: 1 },
@@ -67,14 +76,14 @@ const Orders = () => {
 				return (
 					<div className="actionsContainer">
 						<button
-							disabled = {params.row.orderStatus == "Fulfilled"}
+							disabled={params.row.orderStatus == "Fulfilled"}
 							className="markButton"
 							onClick={async () => {
 								console.log("Pressed");
 								await updateDoc(doc(db, "orders", params.row.docId), {
 									orderStatus: "Fulfilled",
 								});
-								setReload(!reload)
+								setReload(!reload);
 							}}
 						>
 							Mark as fulfilled
