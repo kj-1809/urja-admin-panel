@@ -25,10 +25,10 @@ const AddProduct = () => {
 		const docRef = await addDoc(collection(db, "products"), {
 			productId: Number(productId),
 			productName: productName,
-			price: price,
-			discount: discount,
+			price: Number(price),
+			discount: Number(discount),
 			img: imgUrl,
-			quantity : quantity
+			quantity : Number(quantity)
 		});
 		console.log("Document written with ID: ", docRef.id);
 		navigate("/products");

@@ -63,12 +63,12 @@ const EditProduct = () => {
 
 	async function handleSubmit() {
 		await updateDoc(doc(db, "products", docId), {
-			productId: productId,
+			productId: Number(productId),
 			productName: productName,
-			price: price,
-			discount: discount,
+			price: Number(price),
+			discount: Number(discount),
 			img: imgUrl,
-			quantity : quantity,
+			quantity : Number(quantity),
 		});
 		console.log("Product Update successful");
 		navigate("/products");

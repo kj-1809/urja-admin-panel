@@ -38,10 +38,10 @@ const EditUser = () => {
 			email: email,
 			uid: userId,
 			address: address,
-			disc5: discount5kg,
-			disc47: discount47kg,
-			disc19: discount19kg,
-			disc430: discount430kg,
+			disc5: Number(discount5kg),
+			disc47: Number(discount47kg),
+			disc19: Number(discount19kg),
+			disc430: Number(discount430kg),
 		});
 		console.log("User Update successful")
 		navigate('/users')

@@ -8,13 +8,51 @@ import {
 	query,
 	updateDoc,
 	doc,
+	getDoc,
+	where,
+	increment
 } from "firebase/firestore";
 import { db } from "../firebase";
+import axios from "axios";
 
 const Orders = () => {
 	const [orders, setOrders] = useState([]);
 	const [reload, setReload] = useState(false);
 	const [currentStatus, setCurrentStatus] = useState(false);
+
+	const sendMessage = (phoneNumber) => {
+		const options = {
+			method: "POST",
+			url: `https://graph.facebook.com/v15.0/${process.env.REACT_APP_SENDER_NUMBER}/messages/`,
+			headers: {
+				Authorization:  `Bearer ${process.env.REACT_APP_WHATSAPP_API_KEY}`,
+				"Content-Type": "application/json"
+			},
+			data: {
+				messaging_product: "whatsapp",
+				to: `91${phoneNumber}`,
+				type: "text",
+				text: {
+					preview_url: false,
+					body: "Your order was successfully delivered ! Thanks for ordering with us !",
+				},
+			},
+		};
+
+		axios.request(options).then(function (response) {
+			console.log("Status : " , response.status)
+			console.log("sent message")
+		}).catch(function (error) {
+			console.error(error);
+		});
+	}
+
+	const updateInventory = async (productDocId , currentQuantity) => {
+		await updateDoc(doc(db, "products", productDocId), {
+			quantity : increment(currentQuantity * -1)
+		});
+	}
+
 
 	const columns = [
 		{
@@ -24,8 +62,6 @@ const Orders = () => {
 			renderCell: (params) => {
 				const seconds = params.row.createdAt.seconds;
 				const currentTime = new Date(seconds * 1000);
-				console.log(currentTime.toLocaleString());
-				// currentTime.toString().slice(4, 25)
 				const options = {
 					year: "numeric",
 					month: "short",
@@ -83,6 +119,22 @@ const Orders = () => {
 								await updateDoc(doc(db, "orders", params.row.docId), {
 									orderStatus: "Fulfilled",
 								});
+								console.log("updated")
+								// TODO : reduce stock from the inventory
+								const qu = query(collection(db,"products") , where("productId" , "==" , params.row.productId));
+								const productQuerySnapshot = await getDocs(qu);
+								productQuerySnapshot.forEach((doc) => {
+									updateInventory(doc.id , params.row.quantity)
+								})
+	
+								//Send message to the user
+								const q = query(collection(db,"users"),where("uid","==",params.row.uid));
+								const userQuerySnapshot = await getDocs(q);
+								console.log("found user")
+								userQuerySnapshot.forEach((doc) => {
+									console.log("queued message")
+									sendMessage(doc.data().phone)
+								})
 								setReload(!reload);
 							}}
 						>
@@ -100,7 +152,6 @@ const Orders = () => {
 		let arr = [];
 		querySnapshot.forEach((doc) => {
 			// doc.data() is never undefined for query doc snapshots
-			console.log(doc.id, " => ", doc.data());
 			let tempObj = doc.data();
 			tempObj["docId"] = doc.id;
 			arr.push(tempObj);
