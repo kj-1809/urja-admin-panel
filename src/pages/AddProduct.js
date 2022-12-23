@@ -55,7 +55,7 @@ const AddProduct = () => {
 	}
 
 	return (
-		<div className="addProductContainer">
+		<div className="inputPageContainer">
 			<div className="headingContainerAddProduct">
 				<h1>Add Product</h1>
 			</div>

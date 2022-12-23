@@ -1,7 +1,9 @@
 .editProductContainer{
   margin : 10px;
 }
-
+.inputFormContainer{
+  margin-top: 40px;
+}
 .buttonContainerEditProduct {
   margin-top: 10vh;
   display: flex;

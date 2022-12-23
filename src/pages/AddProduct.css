@@ -1,8 +1,9 @@
-.addProductContainer {
+.inputPageContainer {
   /* display: flex;
   flex-direction: column;
   align-items: flex-start; */
-  margin : 10px
+  margin : 2vw 2vw;
+
 }
 
 

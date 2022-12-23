@@ -104,12 +104,12 @@ const EditProduct = () => {
 	console.log(productName);
 
 	return (
-		<div className="editProductContainer">
+		<div className="inputPageContainer">
 			<div className="headingContainerEditProduct">
 				<h1>Edit Product</h1>
 			</div>
 
-			<div>
+			<div className = "inputFormContainer">
 				<form>
 					<TextInputMod
 						placeholder="Product ID"

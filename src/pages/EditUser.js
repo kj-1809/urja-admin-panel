@@ -79,12 +79,12 @@ const EditUser = () => {
 	console.log(userData);
 
 	return (
-		<div className="editUserContainer">
+		<div className="inputPageContainer">
 			<div className="headingContainerEditUser">
 				<h1>Edit User</h1>
 			</div>
 
-			<div>
+			<div className = "inputFormContainer">
 				<form>
 					<TextInputMod
 						placeholder="Name"

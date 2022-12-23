@@ -5,6 +5,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
+import LinearIndeterminate from "../components/LinearIndeterminate"
 
 const columns = [
 	{ field: "name", headerName: "Name", flex: 1 },
@@ -49,8 +50,10 @@ const columns = [
 
 const Users = () => {
 	const [users, setUsers] = useState([]);
+	const [fetchingUsers , setFetchingUsers] = useState(false);
 
 	async function fetchUsers() {
+		setFetchingUsers(true);
 		const querySnapshot = await getDocs(collection(db, "users"));
 		let arr = [];
 		querySnapshot.forEach((doc) => {
@@ -60,11 +63,16 @@ const Users = () => {
 			arr.push(doc.data());
 		});
 		setUsers(arr);
+		setFetchingUsers(false);
 	}
 
 	useEffect(() => {
 		fetchUsers();
 	}, []);
+
+	if(fetchingUsers){
+		return <LinearIndeterminate />;
+	}
 
 	return (
 		<div className="container">

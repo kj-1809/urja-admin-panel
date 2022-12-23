@@ -10,8 +10,7 @@
 .mainScreen {
   display: flex;
   flex : 1;
-  margin : 10px 10px 10px 230px;
+  margin : 0px 0px 0px 220px;
   flex-direction: column;
-  /* background-color : aqua; */
 }
 

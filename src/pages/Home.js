@@ -5,7 +5,7 @@ import "./Home.css";
 import { db } from "../firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 
-import BasicTable from "../components/BasicTable";
+import LinearIndeterminate from "../components/LinearIndeterminate"
 
 const Home = () => {
 	const [productData, setProductData] = useState([]);
@@ -17,25 +17,26 @@ const Home = () => {
 	const [revenue, setRevenue] = useState(0);
 	const [totalOrders, setTotalOrders] = useState(0);
 
+	const [fetchingOrders , setFetchingOrders] = useState(false);
+	const [fetchingProducts , setFetchingProducts] = useState(false);
+
+
 	const fetchProducts = async () => {
+		setFetchingProducts(true);
 		const querySnapshot = await getDocs(collection(db, "products"));
 		let arr = [];
 		querySnapshot.forEach((doc) => {
 			// doc.data() is never undefined for query doc snapshots
-			console.log("product : ");
-			console.log(doc.id, " => ", doc.data());
 			arr.push(doc.data());
 		});
 		setProductData(arr);
+		setFetchingProducts(false);
 	};
 
 	const fetchOrders = async () => {
+		setFetchingOrders(true);
 		const curDate = new Date();
-		console.log("CUR DATE");
-		console.log(curDate);
 		const newDate = new Date(curDate - 30 * 24 * 60 * 60 * 1000);
-		console.log(newDate);
-
 
 		const q = query(collection(db, "orders"), where("createdAt" , ">=" , newDate));
 		
@@ -43,9 +44,9 @@ const Home = () => {
 		let arr = [];
 		querySnapshot.forEach((doc) => {
 			arr.push(doc.data());
-			console.log(doc.data())
 		});
 		setOrdersData(arr);
+		setFetchingOrders(false);
 	};
 
 	useEffect(() => {
@@ -79,6 +80,10 @@ const Home = () => {
 		setTotalOrders(ordersData.length);
 	}, [ordersData]);
 
+	if(fetchingOrders || fetchingProducts){
+		return <LinearIndeterminate />;
+	}
+
 	return (
 		<div className="container">
 			<div className="headingContainerDash">
@@ -108,10 +113,6 @@ const Home = () => {
 					style={inventory430 <= 50 ? "red" : "green"}
 				/>
 			</div>
-
-			{/* <div className="tableContainer">
-				<BasicTable />
-			</div> */}
 		</div>
 	);
 };

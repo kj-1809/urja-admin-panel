@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
+import LinearIndeterminate from "../components/LinearIndeterminate"
 
 const columns = [
 	{ field: "productId", headerName: "Product ID", flex: 1 },
@@ -37,8 +38,10 @@ const columns = [
 ];
 const Products = () => {
 	const [products, setProducts] = useState([]);
+	const [fetchingProducts , setFetchingProducts] = useState(false);
 
 	async function fetchProducts() {
+		setFetchingProducts(true);
 		const querySnapshot = await getDocs(collection(db, "products"));
 		let arr = [];
 		querySnapshot.forEach((doc) => {
@@ -48,11 +51,16 @@ const Products = () => {
 			arr.push(doc.data());
 		});
 		setProducts(arr);
+		setFetchingProducts(false);
 	}
 
 	useEffect(() => {
 		fetchProducts();
 	}, []);
+
+	if(fetchingProducts){
+		return <LinearIndeterminate />;
+	}
 
 	return (
 		<div className="container">

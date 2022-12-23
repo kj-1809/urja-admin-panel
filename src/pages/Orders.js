@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Orders.css";
 import { DataGrid } from "@mui/x-data-grid";
+import LinearIndeterminate from "../components/LinearIndeterminate";
 import {
 	collection,
 	getDocs,
@@ -10,7 +11,7 @@ import {
 	doc,
 	getDoc,
 	where,
-	increment
+	increment,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import axios from "axios";
@@ -18,15 +19,15 @@ import axios from "axios";
 const Orders = () => {
 	const [orders, setOrders] = useState([]);
 	const [reload, setReload] = useState(false);
-	const [currentStatus, setCurrentStatus] = useState(false);
+	const [fetchingOrders, setFetchingOrders] = useState(false);
 
 	const sendMessage = (phoneNumber) => {
 		const options = {
 			method: "POST",
 			url: `https://graph.facebook.com/v15.0/${process.env.REACT_APP_SENDER_NUMBER}/messages/`,
 			headers: {
-				Authorization:  `Bearer ${process.env.REACT_APP_WHATSAPP_API_KEY}`,
-				"Content-Type": "application/json"
+				Authorization: `Bearer ${process.env.REACT_APP_WHATSAPP_API_KEY}`,
+				"Content-Type": "application/json",
 			},
 			data: {
 				messaging_product: "whatsapp",
@@ -39,20 +40,22 @@ const Orders = () => {
 			},
 		};
 
-		axios.request(options).then(function (response) {
-			console.log("Status : " , response.status)
-			console.log("sent message")
-		}).catch(function (error) {
-			console.error(error);
-		});
-	}
+		axios
+			.request(options)
+			.then(function (response) {
+				console.log("Status : ", response.status);
+				console.log("sent message");
+			})
+			.catch(function (error) {
+				console.error(error);
+			});
+	};
 
-	const updateInventory = async (productDocId , currentQuantity) => {
+	const updateInventory = async (productDocId, currentQuantity) => {
 		await updateDoc(doc(db, "products", productDocId), {
-			quantity : increment(currentQuantity * -1)
+			quantity: increment(currentQuantity * -1),
 		});
-	}
-
+	};
 
 	const columns = [
 		{
@@ -66,9 +69,9 @@ const Orders = () => {
 					year: "numeric",
 					month: "short",
 					day: "numeric",
-					hour : "numeric",
-					minute : "numeric",
-					second : "numeric",
+					hour: "numeric",
+					minute: "numeric",
+					second: "numeric",
 				};
 				return <span>{currentTime.toLocaleString("en-GB", options)}</span>;
 			},
@@ -119,22 +122,28 @@ const Orders = () => {
 								await updateDoc(doc(db, "orders", params.row.docId), {
 									orderStatus: "Fulfilled",
 								});
-								console.log("updated")
+								console.log("updated");
 								// TODO : reduce stock from the inventory
-								const qu = query(collection(db,"products") , where("productId" , "==" , params.row.productId));
+								const qu = query(
+									collection(db, "products"),
+									where("productId", "==", params.row.productId)
+								);
 								const productQuerySnapshot = await getDocs(qu);
 								productQuerySnapshot.forEach((doc) => {
-									updateInventory(doc.id , params.row.quantity)
-								})
-	
+									updateInventory(doc.id, params.row.quantity);
+								});
+
 								//Send message to the user
-								const q = query(collection(db,"users"),where("uid","==",params.row.uid));
+								const q = query(
+									collection(db, "users"),
+									where("uid", "==", params.row.uid)
+								);
 								const userQuerySnapshot = await getDocs(q);
-								console.log("found user")
+								console.log("found user");
 								userQuerySnapshot.forEach((doc) => {
-									console.log("queued message")
-									sendMessage(doc.data().phone)
-								})
+									console.log("queued message");
+									sendMessage(doc.data().phone);
+								});
 								setReload(!reload);
 							}}
 						>
@@ -147,6 +156,7 @@ const Orders = () => {
 	];
 
 	async function fetchOrders() {
+		setFetchingOrders(true);
 		const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
 		const querySnapshot = await getDocs(q);
 		let arr = [];
@@ -157,11 +167,16 @@ const Orders = () => {
 			arr.push(tempObj);
 		});
 		setOrders(arr);
+		setFetchingOrders(false);
 	}
 
 	useEffect(() => {
 		fetchOrders();
 	}, [reload]);
+
+	if (fetchingOrders) {
+		return <LinearIndeterminate />;
+	}
 
 	return (
 		<div className="container">

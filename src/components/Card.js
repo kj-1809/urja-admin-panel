@@ -5,7 +5,7 @@ export const Card = (props) => {
   return (
     <div className = "card-container">
       <h3>{props.title}</h3>
-      <h1 className = {`${props.style}`}>{props.value}</h1>
+      <h1 className = {`${props.style} cardValue`}>{props.value}</h1>
     </div>
   )
 }
