@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
 
 .card-container {
-  display: relative;
   font-family: 'Montserrat', sans-serif;
   border-radius : 25px;
   background-color: #060b26f2;
@@ -20,9 +19,5 @@
 .green {
   color : rgb(69, 185, 69)
 }
-.cardValue {
-  display: relative;
-  right : 0px;
-  background-color: aqua;
-}
+
 

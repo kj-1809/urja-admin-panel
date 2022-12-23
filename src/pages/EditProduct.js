@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 import { v4 } from "uuid";
+import LinearIndeterminate from "../components/LinearIndeterminate";
 
 const EditProduct = () => {
 	const { id } = useParams();
@@ -27,17 +28,21 @@ const EditProduct = () => {
 	const [productName, setProductName] = useState("");
 	const [price, setPrice] = useState(0);
 	const [discount, setDiscount] = useState(0);
-	const [quantity , setQuantity] = useState(0);
+	const [quantity, setQuantity] = useState(0);
 	const [currentImg, setCurrentImg] = useState("");
 	const [uploadFile, setUploadFile] = useState(null);
 	const [imgUrl, setImgUrl] = useState("");
 	const [docId, setDocId] = useState("");
 	const [uploadSuccessful, setUploadSuccessful] = useState(false);
+	const [loading, setLoading] = useState(false);
+	const [uploading, setUploading] = useState(false);
 
 	async function handleDelete() {
+		setLoading(true);
 		console.log("TRIGGER deleted");
 		await deleteDoc(doc(db, "products", docId));
 		console.log("Successfully deleted");
+		setLoading(false);
 		navigate("/products");
 	}
 
@@ -46,6 +51,7 @@ const EditProduct = () => {
 			alert("Please select an image to upload");
 			return;
 		}
+		setUploading(true);
 		console.log("begun");
 		const imgRef = ref(storage, `images/${uploadFile.name + v4()}`);
 		uploadBytes(imgRef, uploadFile)
@@ -54,27 +60,33 @@ const EditProduct = () => {
 					setImgUrl(url);
 					console.log("uploaded image");
 					setUploadSuccessful(true);
+					setUploading(false);
 				});
 			})
 			.catch((error) => {
+				alert("Some error occured . Please try again!");
 				console.log("Error occured : ", error);
+				setUploading(false);
 			});
 	}
 
 	async function handleSubmit() {
+		setLoading(true);
 		await updateDoc(doc(db, "products", docId), {
 			productId: Number(productId),
 			productName: productName,
 			price: Number(price),
 			discount: Number(discount),
 			img: imgUrl,
-			quantity : Number(quantity),
+			quantity: Number(quantity),
 		});
 		console.log("Product Update successful");
+		setLoading(false);
 		navigate("/products");
 	}
 
 	async function fetchProductData(id) {
+		setLoading(true);
 		const q = query(
 			collection(db, "products"),
 			where("productId", "==", Number(id))
@@ -86,6 +98,7 @@ const EditProduct = () => {
 			setDocId(doc.id);
 			setProductData(doc.data());
 		});
+		setLoading(false);
 	}
 
 	useEffect(() => {
@@ -103,69 +116,74 @@ const EditProduct = () => {
 
 	console.log(productName);
 
+	if (loading) {
+		return <LinearIndeterminate />;
+	}
+
 	return (
-		<div className="inputPageContainer">
-			<div className="headingContainerEditProduct">
-				<h1>Edit Product</h1>
+		<>
+			{uploading ? <LinearIndeterminate /> : null}
+			<div className="inputPageContainer">
+				<div className="headingContainerEditProduct">
+					<h1>Edit Product</h1>
+				</div>
+
+				<div className="inputFormContainer">
+					<form>
+						<TextInputMod
+							placeholder="Product ID"
+							value={productId}
+							onChange={(e) => setProductId(e.target.value)}
+						/>
+						<TextInputMod
+							placeholder="Product Name"
+							value={productName}
+							onChange={(e) => setProductName(e.target.value)}
+						/>
+						<TextInputMod
+							placeholder="Price"
+							value={price}
+							onChange={(e) => setPrice(e.target.value)}
+						/>
+						<TextInputMod
+							placeholder="Discount"
+							value={discount}
+							onChange={(e) => setDiscount(e.target.value)}
+						/>
+						<TextInputMod
+							placeholder="Inventory"
+							value={quantity}
+							onChange={(e) => setQuantity(e.target.value)}
+						/>
+					</form>
+				</div>
+
+				<div className="imageInputContainer">
+					<img src={currentImg} alt="current-image" className="currentImage" />
+					<input
+						className="inputStyle"
+						type="file"
+						onChange={(e) => setUploadFile(e.target.files[0])}
+						accept="image/jpeg , image/png"
+					/>
+					<button className="uploadImageButton" onClick={handleUpload}>
+						Upload Image
+					</button>
+					<span hidden={!uploadSuccessful} className="successMarker">
+						✅ Upload successful !
+					</span>
+				</div>
+
+				<div className="buttonContainerEditProduct">
+					<button className="submitButton" onClick={handleSubmit}>
+						Update
+					</button>
+					<button className="deleteProductButton" onClick={handleDelete}>
+						Delete
+					</button>
+				</div>
 			</div>
-
-			<div className = "inputFormContainer">
-				<form>
-					<TextInputMod
-						placeholder="Product ID"
-						value={productId}
-						onChange={(e) => setProductId(e.target.value)}
-					/>
-					<TextInputMod
-						placeholder="Product Name"
-						value={productName}
-						onChange={(e) => setProductName(e.target.value)}
-					/>
-					<TextInputMod
-						placeholder="Price"
-						value={price}
-						onChange={(e) => setPrice(e.target.value)}
-					/>
-					<TextInputMod
-						placeholder="Discount"
-						value={discount}
-						onChange={(e) => setDiscount(e.target.value)}
-					/>
-					<TextInputMod
-						placeholder="Inventory"
-						value={quantity}
-						onChange={(e) => setQuantity(e.target.value)}
-					/>
-				</form>
-			</div>
-
-
-			<div className="imageInputContainer">
-				<img src={currentImg} alt="current-image" className="currentImage" />
-				<input
-					className = "inputStyle"
-					type="file"
-					onChange={(e) => setUploadFile(e.target.files[0])}
-					accept="image/jpeg , image/png"
-				/>
-				<button className="uploadImageButton" onClick={handleUpload}>
-					Upload Image
-				</button>
-				<span hidden={!uploadSuccessful} className="successMarker">
-					✅ Upload successful !
-				</span>
-			</div>
-
-
-			<div className="buttonContainerEditProduct">
-				<button className="submitButton" onClick={handleSubmit}>
-					Update
-				</button>
-				<button className="deleteProductButton" onClick={handleDelete}>
-					Delete
-				</button>
-			</div>
-		</div>
+		</>
 	);
 };
 

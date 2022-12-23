@@ -19,8 +19,8 @@ import axios from "axios";
 const Orders = () => {
 	const [orders, setOrders] = useState([]);
 	const [reload, setReload] = useState(false);
-	const [fetchingOrders, setFetchingOrders] = useState(false);
-
+	const [fetching, setFetching] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const sendMessage = (phoneNumber) => {
 		const options = {
 			method: "POST",
@@ -55,6 +55,7 @@ const Orders = () => {
 		await updateDoc(doc(db, "products", productDocId), {
 			quantity: increment(currentQuantity * -1),
 		});
+		setLoading(false);
 	};
 
 	const columns = [
@@ -119,6 +120,7 @@ const Orders = () => {
 							className="markButton"
 							onClick={async () => {
 								console.log("Pressed");
+								setLoading(true);
 								await updateDoc(doc(db, "orders", params.row.docId), {
 									orderStatus: "Fulfilled",
 								});
@@ -156,7 +158,7 @@ const Orders = () => {
 	];
 
 	async function fetchOrders() {
-		setFetchingOrders(true);
+		setFetching(true);
 		const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
 		const querySnapshot = await getDocs(q);
 		let arr = [];
@@ -167,33 +169,36 @@ const Orders = () => {
 			arr.push(tempObj);
 		});
 		setOrders(arr);
-		setFetchingOrders(false);
+		setFetching(false);
 	}
 
 	useEffect(() => {
 		fetchOrders();
 	}, [reload]);
 
-	if (fetchingOrders) {
+	if (fetching) {
 		return <LinearIndeterminate />;
 	}
 
 	return (
-		<div className="container">
-			<div className="headingContainerOrders">
-				<h1>Orders</h1>
+		<>
+			{loading ? <LinearIndeterminate /> : null}
+			<div className="container">
+				<div className="headingContainerOrders">
+					<h1>Orders</h1>
+				</div>
+				<div className="dataTableContainer">
+					<DataGrid
+						rows={orders}
+						columns={columns}
+						pageSize={10}
+						rowsPerPageOptions={[10]}
+						key={orders.orderId}
+						getRowId={(row) => row.orderId}
+					/>
+				</div>
 			</div>
-			<div className="dataTableContainer">
-				<DataGrid
-					rows={orders}
-					columns={columns}
-					pageSize={10}
-					rowsPerPageOptions={[10]}
-					key={orders.orderId}
-					getRowId={(row) => row.orderId}
-				/>
-			</div>
-		</div>
+		</>
 	);
 };
 

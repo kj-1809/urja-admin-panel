@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { collection, query, where, getDocs,  doc , updateDoc , deleteDoc} from "firebase/firestore";
 import { db,auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
+import LinearIndeterminate from "../components/LinearIndeterminate"
 
 
 const EditUser = () => {
@@ -24,13 +25,18 @@ const EditUser = () => {
 	const [discount47kg, setDiscount47kg] = useState(0);
 	const [discount19kg, setDiscount19kg] = useState(0);
 	const [discount430kg, setDiscount430kg] = useState(0);
+	const [loading , setLoading] = useState(false);
 
 	async function handleDelete(){
+		setLoading(true)
 		await deleteDoc(doc(db,"users",docId))
 		console.log("user Deleted successfully")
+		setLoading(false);
+		navigate('/users')
 	}
 
 	async function handleSubmit(){
+		setLoading(true);
 		await updateDoc(doc(db, "users", docId), {
 			name: name,
 			phone: phone,
@@ -44,10 +50,12 @@ const EditUser = () => {
 			disc430: Number(discount430kg),
 		});
 		console.log("User Update successful")
+		setLoading(false);
 		navigate('/users')
 	}
 
 	async function fetchUserData(id) {
+		setLoading(true);
 		const q = query(collection(db, "users"), where("uid", "==", id));
 		const querySnapshot = await getDocs(q);
 		console.log("size : ", querySnapshot.size);
@@ -56,6 +64,7 @@ const EditUser = () => {
 			setUserData(doc.data());
 			setDocId(doc.id)
 		});
+		setLoading(false);
 	}
 
 	useEffect(() => {
@@ -77,6 +86,11 @@ const EditUser = () => {
 
 	console.log("User Data : ");
 	console.log(userData);
+
+
+	if(loading){
+		return <LinearIndeterminate />;
+	}
 
 	return (
 		<div className="inputPageContainer">
