@@ -1,20 +1,27 @@
 import React, { useState, useEffect } from "react";
 import "./EditUser.css";
 import TextInput from "../components/TextInput";
-import TextInputMod from "../components/TextInputMod"
+import TextInputMod from "../components/TextInputMod";
 import { useParams } from "react-router-dom";
-import { collection, query, where, getDocs,  doc , updateDoc , deleteDoc} from "firebase/firestore";
-import { db,auth } from "../firebase";
+import {
+	collection,
+	query,
+	where,
+	getDocs,
+	doc,
+	updateDoc,
+	deleteDoc,
+} from "firebase/firestore";
+import { db, auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
-import LinearIndeterminate from "../components/LinearIndeterminate"
-
+import LinearIndeterminate from "../components/LinearIndeterminate";
 
 const EditUser = () => {
 	const { id } = useParams();
 	console.log("id : ", id);
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 	const [userData, setUserData] = useState({});
-	const [docId , setDocId] = useState("");
+	const [docId, setDocId] = useState("");
 	const [name, setName] = useState("");
 	const [phone, setPhone] = useState("");
 	const [gstin, setGstin] = useState("");
@@ -25,17 +32,17 @@ const EditUser = () => {
 	const [discount47kg, setDiscount47kg] = useState(0);
 	const [discount19kg, setDiscount19kg] = useState(0);
 	const [discount430kg, setDiscount430kg] = useState(0);
-	const [loading , setLoading] = useState(false);
+	const [loading, setLoading] = useState(false);
 
-	async function handleDelete(){
-		setLoading(true)
-		await deleteDoc(doc(db,"users",docId))
-		console.log("user Deleted successfully")
+	async function handleDelete() {
+		setLoading(true);
+		await deleteDoc(doc(db, "users", docId));
+		console.log("user Deleted successfully");
 		setLoading(false);
-		navigate('/users')
+		navigate("/users");
 	}
 
-	async function handleSubmit(){
+	async function handleSubmit() {
 		setLoading(true);
 		await updateDoc(doc(db, "users", docId), {
 			name: name,
@@ -49,9 +56,9 @@ const EditUser = () => {
 			disc19: Number(discount19kg),
 			disc430: Number(discount430kg),
 		});
-		console.log("User Update successful")
+		console.log("User Update successful");
 		setLoading(false);
-		navigate('/users')
+		navigate("/users");
 	}
 
 	async function fetchUserData(id) {
@@ -62,7 +69,7 @@ const EditUser = () => {
 		querySnapshot.forEach((doc) => {
 			// doc.data() is never undefined for query doc snapshots
 			setUserData(doc.data());
-			setDocId(doc.id)
+			setDocId(doc.id);
 		});
 		setLoading(false);
 	}
@@ -84,11 +91,8 @@ const EditUser = () => {
 		setDiscount430kg(userData.disc430);
 	}, [userData]);
 
-	console.log("User Data : ");
-	console.log(userData);
 
-
-	if(loading){
+	if (loading) {
 		return <LinearIndeterminate />;
 	}
 
@@ -98,7 +102,7 @@ const EditUser = () => {
 				<h1>Edit User</h1>
 			</div>
 
-			<div className = "inputFormContainer">
+			<div className="inputFormContainer">
 				<form>
 					<TextInputMod
 						placeholder="Name"
@@ -153,8 +157,12 @@ const EditUser = () => {
 				</form>
 			</div>
 			<div className="buttonContainerEditUser">
-				<button className="submitButton" onClick={handleSubmit}>Submit</button>
-				<button className="deleteUserButton" onClick = {handleDelete}>Delete User</button>
+				<button className="submitButton" onClick={handleSubmit}>
+					Submit
+				</button>
+				<button className="deleteUserButton" onClick={handleDelete}>
+					Delete User
+				</button>
 			</div>
 		</div>
 	);

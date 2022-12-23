@@ -12,15 +12,49 @@ import {
 	getDoc,
 	where,
 	increment,
+	deleteDoc
 } from "firebase/firestore";
 import { db } from "../firebase";
 import axios from "axios";
+import CustomAlert from "../components/CustomAlert";
+import CustomModal from "../components/CustomModal";
 
 const Orders = () => {
 	const [orders, setOrders] = useState([]);
 	const [reload, setReload] = useState(false);
 	const [fetching, setFetching] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const [open, setOpen] = useState(false);
+	const [openModal, setOpenModal] = useState(false);
+	const [tbdDocId , setTbdDocId] = useState(undefined);
+
+	function handleAlertClose(event, reason) {
+		if (reason === "clickaway") {
+			return;
+		}
+		setOpen(false);
+	}
+
+	function handleModalClose() {
+		setOpenModal(false);
+	}
+
+	const handleOrderDelete = async () => {
+		// handle order delete
+		console.log("TBD DOC ID : " , tbdDocId)
+
+		if(tbdDocId === undefined){
+			return;
+		}
+		setLoading(true);
+		await deleteDoc(doc(db,"orders",tbdDocId));
+		setTbdDocId(undefined);
+		setLoading(false);
+		handleModalClose()
+		setReload(!reload)
+	}
+
+
 	const sendMessage = (phoneNumber) => {
 		const options = {
 			method: "POST",
@@ -39,7 +73,6 @@ const Orders = () => {
 				},
 			},
 		};
-
 		axios
 			.request(options)
 			.then(function (response) {
@@ -56,13 +89,14 @@ const Orders = () => {
 			quantity: increment(currentQuantity * -1),
 		});
 		setLoading(false);
+		setOpen(true);
 	};
 
 	const columns = [
 		{
 			field: "createdAt",
 			headerName: "Time",
-			flex: 2,
+			flex: 1.7,
 			renderCell: (params) => {
 				const seconds = params.row.createdAt.seconds;
 				const currentTime = new Date(seconds * 1000);
@@ -77,9 +111,9 @@ const Orders = () => {
 				return <span>{currentTime.toLocaleString("en-GB", options)}</span>;
 			},
 		},
-		{ field: "orderId", headerName: "Order ID", flex: 1 },
+		{ field: "orderId", headerName: "Order ID", flex: 0.8 },
 		{ field: "productName", headerName: "Product Name", flex: 1.5 },
-		{ field: "quantity", headerName: "Quantity", flex: 1 },
+		{ field: "quantity", headerName: "Quantity", flex: 0.7 },
 		{
 			field: "price",
 			headerName: "Price",
@@ -111,7 +145,7 @@ const Orders = () => {
 		{
 			field: "actions",
 			headerName: "Actions",
-			flex: 1.5,
+			flex: 2,
 			renderCell: (params) => {
 				return (
 					<div className="actionsContainer">
@@ -151,6 +185,12 @@ const Orders = () => {
 						>
 							Mark as fulfilled
 						</button>
+						<button className = "deleteButton" onClick = {() => {
+							setTbdDocId(params.row.docId)
+							setOpenModal(true);
+						}}>
+							Delete
+						</button>
 					</div>
 				);
 			},
@@ -182,6 +222,21 @@ const Orders = () => {
 
 	return (
 		<>
+			<CustomAlert
+				open={open}
+				onClose={handleAlertClose}
+				severity="success"
+				message="Marked as fulfilled !"
+			/>
+			<CustomModal
+				open={openModal}
+				onClose={handleModalClose}
+				title="Delete"
+				content="Are you sure you want to Delete an order ?"
+				onAgree={handleOrderDelete}
+				confirmatoryText = "Delete"
+			/>
+
 			{loading ? <LinearIndeterminate /> : null}
 			<div className="container">
 				<div className="headingContainerOrders">
