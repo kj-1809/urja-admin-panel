@@ -12,7 +12,7 @@ import {
 	getDoc,
 	where,
 	increment,
-	deleteDoc
+	deleteDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import axios from "axios";
@@ -26,7 +26,7 @@ const Orders = () => {
 	const [loading, setLoading] = useState(false);
 	const [open, setOpen] = useState(false);
 	const [openModal, setOpenModal] = useState(false);
-	const [tbdDocId , setTbdDocId] = useState(undefined);
+	const [tbdDocId, setTbdDocId] = useState(undefined);
 
 	function handleAlertClose(event, reason) {
 		if (reason === "clickaway") {
@@ -41,21 +41,21 @@ const Orders = () => {
 
 	const handleOrderDelete = async () => {
 		// handle order delete
-		console.log("TBD DOC ID : " , tbdDocId)
+		console.log("TBD DOC ID : ", tbdDocId);
 
-		if(tbdDocId === undefined){
+		if (tbdDocId === undefined) {
 			return;
 		}
 		setLoading(true);
-		await deleteDoc(doc(db,"orders",tbdDocId));
+		await deleteDoc(doc(db, "orders", tbdDocId));
 		setTbdDocId(undefined);
 		setLoading(false);
-		handleModalClose()
-		setReload(!reload)
-	}
-
+		handleModalClose();
+		setReload(!reload);
+	};
 
 	const sendMessage = (phoneNumber) => {
+		console.log("Phone : ", phoneNumber);
 		const options = {
 			method: "POST",
 			url: `https://graph.facebook.com/v15.0/${process.env.REACT_APP_SENDER_NUMBER}/messages/`,
@@ -66,10 +66,12 @@ const Orders = () => {
 			data: {
 				messaging_product: "whatsapp",
 				to: `91${phoneNumber}`,
-				type: "text",
-				text: {
-					preview_url: false,
-					body: "Your order was successfully delivered ! Thanks for ordering with us !",
+				type: "template",
+				template: {
+					name: "hello_world",
+					language: {
+						code: "en_US",
+					},
 				},
 			},
 		};
@@ -185,10 +187,13 @@ const Orders = () => {
 						>
 							Mark as fulfilled
 						</button>
-						<button className = "deleteButton" onClick = {() => {
-							setTbdDocId(params.row.docId)
-							setOpenModal(true);
-						}}>
+						<button
+							className="deleteButton"
+							onClick={() => {
+								setTbdDocId(params.row.docId);
+								setOpenModal(true);
+							}}
+						>
 							Delete
 						</button>
 					</div>
@@ -234,7 +239,7 @@ const Orders = () => {
 				title="Delete"
 				content="Are you sure you want to Delete an order ?"
 				onAgree={handleOrderDelete}
-				confirmatoryText = "Delete"
+				confirmatoryText="Delete"
 			/>
 
 			{loading ? <LinearIndeterminate /> : null}
