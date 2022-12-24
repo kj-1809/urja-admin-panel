@@ -5,7 +5,7 @@ import "./Home.css";
 import { db } from "../firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 
-import LinearIndeterminate from "../components/LinearIndeterminate"
+import LinearIndeterminate from "../components/LinearIndeterminate";
 
 const Home = () => {
 	const [productData, setProductData] = useState([]);
@@ -17,9 +17,8 @@ const Home = () => {
 	const [revenue, setRevenue] = useState(0);
 	const [totalOrders, setTotalOrders] = useState(0);
 
-	const [fetchingOrders , setFetchingOrders] = useState(false);
-	const [fetchingProducts , setFetchingProducts] = useState(false);
-
+	const [fetchingOrders, setFetchingOrders] = useState(false);
+	const [fetchingProducts, setFetchingProducts] = useState(false);
 
 	const fetchProducts = async () => {
 		setFetchingProducts(true);
@@ -38,8 +37,11 @@ const Home = () => {
 		const curDate = new Date();
 		const newDate = new Date(curDate - 30 * 24 * 60 * 60 * 1000);
 
-		const q = query(collection(db, "orders"), where("createdAt" , ">=" , newDate));
-		
+		const q = query(
+			collection(db, "orders"),
+			where("createdAt", ">=", newDate)
+		);
+
 		const querySnapshot = await getDocs(q);
 		let arr = [];
 		querySnapshot.forEach((doc) => {
@@ -80,7 +82,7 @@ const Home = () => {
 		setTotalOrders(ordersData.length);
 	}, [ordersData]);
 
-	if(fetchingOrders || fetchingProducts){
+	if (fetchingOrders || fetchingProducts) {
 		return <LinearIndeterminate />;
 	}
 
@@ -90,7 +92,11 @@ const Home = () => {
 				<h1>Dashboard</h1>
 			</div>
 			<div className="cardContainer">
-				<Card title="Total Revenue (Last 30 Days)" value={`Rs. ${revenue}`} />
+				<Card
+					title="Total Revenue (Last 30 Days)"
+					value={`Rs. ${revenue}`}
+					style=" green"
+				/>
 				<Card title="Total Orders (Last 30 Days)" value={totalOrders} />
 				<Card
 					title="Inventory (5KG Cylinder)"
