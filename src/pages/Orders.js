@@ -58,32 +58,18 @@ const Orders = () => {
 		console.log("Phone : ", phoneNumber);
 		const options = {
 			method: "POST",
-			url: `https://graph.facebook.com/v15.0/${process.env.REACT_APP_SENDER_NUMBER}/messages/`,
-			headers: {
-				Authorization: `Bearer ${process.env.REACT_APP_WHATSAPP_API_KEY}`,
-				"Content-Type": "application/json",
-			},
-			data: {
-				messaging_product: "whatsapp",
-				to: `91${phoneNumber}`,
-				type: "template",
-				template: {
-					name: "hello_world",
-					language: {
-						code: "en_US",
-					},
-				},
+			url: `https://urja-proxy-api-production.up.railway.app/api/send/orderdelivered`,
+			params: {
+				phone: phoneNumber,
 			},
 		};
 		axios
 			.request(options)
-			.then(function (response) {
-				console.log("Status : ", response.status);
-				console.log("sent message");
+			.then((res) => {
+				console.log("status : ", res.status);
+				console.log(res.body);
 			})
-			.catch(function (error) {
-				console.error(error);
-			});
+			.catch((err) => console.log(err));
 	};
 
 	const updateInventory = async (productDocId, currentQuantity) => {
