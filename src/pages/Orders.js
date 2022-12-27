@@ -24,17 +24,10 @@ const Orders = () => {
 	const [reload, setReload] = useState(false);
 	const [fetching, setFetching] = useState(false);
 	const [loading, setLoading] = useState(false);
-	const [open, setOpen] = useState(false);
 	const [openModal, setOpenModal] = useState(false);
 	const [tbdDocId, setTbdDocId] = useState(undefined);
 
-	function handleAlertClose(event, reason) {
-		if (reason === "clickaway") {
-			return;
-		}
-		setOpen(false);
-	}
-
+	
 	function handleModalClose() {
 		setOpenModal(false);
 	}
@@ -77,7 +70,6 @@ const Orders = () => {
 			quantity: increment(currentQuantity * -1),
 		});
 		setLoading(false);
-		setOpen(true);
 	};
 
 	const columns = [
@@ -213,12 +205,6 @@ const Orders = () => {
 
 	return (
 		<>
-			<CustomAlert
-				open={open}
-				onClose={handleAlertClose}
-				severity="success"
-				message="Marked as fulfilled !"
-			/>
 			<CustomModal
 				open={openModal}
 				onClose={handleModalClose}
