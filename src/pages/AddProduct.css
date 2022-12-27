@@ -1,55 +1,47 @@
 .inputPageContainer {
-  /* display: flex;
+	/* display: flex;
   flex-direction: column;
   align-items: flex-start; */
-  margin : 2vw 2vw;
-
+	margin: 2vw 2vw;
 }
-
 
 .buttonContainerAddProduct {
-  display: flex;
-  flex-direction: column;
-  /* align-items: center; */
-  margin-top: 10vh;
-  /* margin-left: 2vh; */
+	display: flex;
+	flex-direction: column;
+	/* align-items: center; */
+	margin-top: 10vh;
+	/* margin-left: 2vh; */
 }
-.headingContainerAddProduct{
-  margin-bottom: 30px;
+.headingContainerAddProduct {
+	margin-bottom: 30px;
 }
-
 
 .submitButton {
-  margin-top: 20px;
-  padding : 10px;
-  border-radius: 10px;
-  background-color: white;
-  border : 2px solid rgba(19, 128, 0, 0.532);
-  width : 120px;
+	margin-top: 20px;
+	padding: 10px;
+	border-radius: 10px;
+	background-color: white;
+	border: 2px solid rgba(19, 128, 0, 0.532);
+	width: 120px;
 }
 
 .submitButton:hover {
-  background-color: rgba(19,128,0,0.1)
+	background-color: rgba(19, 128, 0, 0.1);
 }
 
 .uploadImageButton {
-  margin-top: 20px;
-  padding : 10px;
-  border-radius: 10px;
-  background-color: white;
-  border : 2px solid rgba(19, 128, 0, 0.532);
-  width : 150px;
-  
+	margin-top: 20px;
+	padding: 10px;
+	border-radius: 10px;
+	background-color: white;
+	border: 2px solid rgba(19, 128, 0, 0.532);
+	width: 150px;
 }
 .uploadImageButton:hover {
-  background-color: rgba(19,128,0,0.1)
+	background-color: rgba(19, 128, 0, 0.1);
 }
-/* .imageSelector{
-  background-color: white;
-  border : 2px solid black;
-  border-radius: 5px;
-  padding : 10px;
-} */
+
 .successMarker {
-  margin-top: 10px;
+	margin-top: 10px;
 }
+
