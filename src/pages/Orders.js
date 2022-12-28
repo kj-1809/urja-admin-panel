@@ -27,10 +27,9 @@ const Orders = () => {
 	const [openModal, setOpenModal] = useState(false);
 	const [tbdDocId, setTbdDocId] = useState(undefined);
 
-	
-	function handleModalClose() {
+	const handleModalClose = () => {
 		setOpenModal(false);
-	}
+	};
 
 	const handleOrderDelete = async () => {
 		// handle order delete
@@ -47,18 +46,28 @@ const Orders = () => {
 		setReload(!reload);
 	};
 
-	const sendMessage = (phoneNumber , orderNumber , itemName , quantity , price) => {
+	const getUserPhoneNumber = async (userId) => {
+		const q = query(collection(db, "users"), where("uid", "==", userId));
+		let userPhoneNumber = "";
+		const userQuerySnapshot = await getDocs(q);
+		userQuerySnapshot.forEach((doc) => {
+			userPhoneNumber = doc.data().phone;
+		});
+		return userPhoneNumber;
+	};
+
+	const sendMessage = (phoneNumber, orderNumber, itemName, quantity, price) => {
 		console.log("Phone : ", phoneNumber);
 		const options = {
 			method: "POST",
 			url: `https://urja-proxy-api-production.up.railway.app/api/send/`,
 			params: {
 				phone: phoneNumber,
-				order_number : orderNumber,
-				item_name : itemName,
-				quantity : quantity,
-				total : Number(price) * Number(quantity),
-				type : "orderdelivered"
+				order_number: orderNumber,
+				item_name: itemName,
+				quantity: quantity,
+				price: price,
+				type: "orderdelivered",
 			},
 		};
 		axios
@@ -155,15 +164,16 @@ const Orders = () => {
 								});
 
 								//Send message to the user
-								const q = query(
-									collection(db, "users"),
-									where("uid", "==", params.row.uid)
+								const userPhoneNumber = await getUserPhoneNumber(
+									params.row.uid
 								);
-								const userQuerySnapshot = await getDocs(q);
-								//could have been done in a better way !
-								userQuerySnapshot.forEach((doc) => {
-									sendMessage(doc.data().phone , params.row.orderId , params.row.productName , params.row.quantity , params.row.price);
-								});
+								sendMessage(
+									userPhoneNumber,
+									params.row.orderId,
+									params.row.productName,
+									params.row.quantity,
+									params.row.price
+								);
 								setReload(!reload);
 							}}
 						>
