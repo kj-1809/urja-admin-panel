@@ -47,13 +47,18 @@ const Orders = () => {
 		setReload(!reload);
 	};
 
-	const sendMessage = (phoneNumber) => {
+	const sendMessage = (phoneNumber , orderNumber , itemName , quantity , price) => {
 		console.log("Phone : ", phoneNumber);
 		const options = {
 			method: "POST",
-			url: `https://urja-proxy-api-production.up.railway.app/api/send/orderdelivered`,
+			url: `https://urja-proxy-api-production.up.railway.app/api/send/`,
 			params: {
 				phone: phoneNumber,
+				order_number : orderNumber,
+				item_name : itemName,
+				quantity : quantity,
+				total : Number(price) * Number(quantity),
+				type : "orderdelivered"
 			},
 		};
 		axios
@@ -133,13 +138,13 @@ const Orders = () => {
 							disabled={params.row.orderStatus == "Fulfilled"}
 							className="markButton"
 							onClick={async () => {
-								console.log("Pressed");
 								setLoading(true);
+								// update order status
 								await updateDoc(doc(db, "orders", params.row.docId), {
 									orderStatus: "Fulfilled",
 								});
-								console.log("updated");
-								// TODO : reduce stock from the inventory
+
+								//update inventory
 								const qu = query(
 									collection(db, "products"),
 									where("productId", "==", params.row.productId)
@@ -155,10 +160,9 @@ const Orders = () => {
 									where("uid", "==", params.row.uid)
 								);
 								const userQuerySnapshot = await getDocs(q);
-								console.log("found user");
+								//could have been done in a better way !
 								userQuerySnapshot.forEach((doc) => {
-									console.log("queued message");
-									sendMessage(doc.data().phone);
+									sendMessage(doc.data().phone , params.row.orderId , params.row.productName , params.row.quantity , params.row.price);
 								});
 								setReload(!reload);
 							}}
