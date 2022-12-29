@@ -15,7 +15,6 @@ import { useAuth } from "./context/AuthContext";
 function App() {
 	const isAdmin = useAuth();
 
-	console.log("isAdmin :: ", isAdmin);
 
 	function RequireAuth(props) {
 		return isAdmin ? props.children : <Navigate to="/login" />;

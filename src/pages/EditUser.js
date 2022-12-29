@@ -18,7 +18,6 @@ import LinearIndeterminate from "../components/LinearIndeterminate";
 
 const EditUser = () => {
 	const { id } = useParams();
-	console.log("id : ", id);
 	const navigate = useNavigate();
 	const [userData, setUserData] = useState({});
 	const [docId, setDocId] = useState("");
@@ -37,7 +36,6 @@ const EditUser = () => {
 	async function handleDelete() {
 		setLoading(true);
 		await deleteDoc(doc(db, "users", docId));
-		console.log("user Deleted successfully");
 		setLoading(false);
 		navigate("/users");
 	}
@@ -56,7 +54,6 @@ const EditUser = () => {
 			disc19: Number(discount19kg),
 			disc430: Number(discount430kg),
 		});
-		console.log("User Update successful");
 		setLoading(false);
 		navigate("/users");
 	}
@@ -65,7 +62,6 @@ const EditUser = () => {
 		setLoading(true);
 		const q = query(collection(db, "users"), where("uid", "==", id));
 		const querySnapshot = await getDocs(q);
-		console.log("size : ", querySnapshot.size);
 		querySnapshot.forEach((doc) => {
 			// doc.data() is never undefined for query doc snapshots
 			setUserData(doc.data());

@@ -58,8 +58,6 @@ const Users = () => {
 		let arr = [];
 		querySnapshot.forEach((doc) => {
 			// doc.data() is never undefined for query doc snapshots
-			console.log("user : ");
-			console.log(doc.id, " => ", doc.data());
 			arr.push(doc.data());
 		});
 		setUsers(arr);

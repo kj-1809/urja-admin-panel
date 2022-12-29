@@ -33,7 +33,6 @@ const Orders = () => {
 
 	const handleOrderDelete = async () => {
 		// handle order delete
-		console.log("TBD DOC ID : ", tbdDocId);
 
 		if (tbdDocId === undefined) {
 			return;
@@ -57,7 +56,6 @@ const Orders = () => {
 	};
 
 	const sendMessage = (phoneNumber, orderNumber, itemName, quantity, price) => {
-		console.log("Phone : ", phoneNumber);
 		const options = {
 			method: "POST",
 			url: `https://urja-proxy-api-production.up.railway.app/api/send/`,
@@ -73,10 +71,8 @@ const Orders = () => {
 		axios
 			.request(options)
 			.then((res) => {
-				console.log("status : ", res.status);
-				console.log(res.body);
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => alert(err));
 	};
 
 	const updateInventory = async (productDocId, currentQuantity) => {

@@ -21,7 +21,6 @@ import LinearIndeterminate from "../components/LinearIndeterminate";
 
 const EditProduct = () => {
 	const { id } = useParams();
-	// console.log("id : ", id);
 	const navigate = useNavigate();
 	const [productData, setProductData] = useState({});
 	const [productId, setProductId] = useState("");
@@ -39,9 +38,7 @@ const EditProduct = () => {
 
 	async function handleDelete() {
 		setLoading(true);
-		console.log("TRIGGER deleted");
 		await deleteDoc(doc(db, "products", docId));
-		console.log("Successfully deleted");
 		setLoading(false);
 		navigate("/products");
 	}
@@ -52,20 +49,17 @@ const EditProduct = () => {
 			return;
 		}
 		setUploading(true);
-		console.log("begun");
 		const imgRef = ref(storage, `images/${uploadFile.name + v4()}`);
 		uploadBytes(imgRef, uploadFile)
 			.then((snapshot) => {
 				getDownloadURL(snapshot.ref).then((url) => {
 					setImgUrl(url);
-					console.log("uploaded image");
 					setUploadSuccessful(true);
 					setUploading(false);
 				});
 			})
 			.catch((error) => {
 				alert("Some error occured . Please try again!");
-				console.log("Error occured : ", error);
 				setUploading(false);
 			});
 	}
@@ -80,7 +74,6 @@ const EditProduct = () => {
 			img: imgUrl,
 			quantity: Number(quantity),
 		});
-		console.log("Product Update successful");
 		setLoading(false);
 		navigate("/products");
 	}
@@ -92,7 +85,6 @@ const EditProduct = () => {
 			where("productId", "==", Number(id))
 		);
 		const querySnapshot = await getDocs(q);
-		console.log("size : ", querySnapshot.size);
 		querySnapshot.forEach((doc) => {
 			// doc.data() is never undefined for query doc snapshots
 			setDocId(doc.id);
@@ -114,7 +106,6 @@ const EditProduct = () => {
 		setQuantity(productData.quantity);
 	}, [productData]);
 
-	console.log(productName);
 
 	if (loading) {
 		return <LinearIndeterminate />;

@@ -48,8 +48,6 @@ const Products = () => {
 		let arr = [];
 		querySnapshot.forEach((doc) => {
 			// doc.data() is never undefined for query doc snapshots
-			console.log("product : ");
-			console.log(doc.id, " => ", doc.data());
 			arr.push(doc.data());
 		});
 		setProducts(arr);

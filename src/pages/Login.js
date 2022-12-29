@@ -19,30 +19,24 @@ const Login = (props) => {
 	async function fetchUserData(userId) {
 		const q = query(collection(db, "users"), where("uid", "==", userId));
 		const querySnapshot = await getDocs(q);
-		console.log("Data fetched successfully");
 		if(querySnapshot.size == 0){
 			alert("incorrect id or pass")
 		}
 		querySnapshot.forEach((doc) => {
 			// doc.data() is never undefined for query doc snapshots
-			console.log("isAdmin" , doc.data().isAdmin)
 			if(!doc.data().admin){
-				console.log("incorrect id or pass")
 			}
 			updateIsAdmin(doc.data().isAdmin)
 		});
 	}
 	const handleSubmit = () => {
-		console.log("Pressed");
 		signInWithEmailAndPassword(auth, email, password)
 			.then((userCredential) => {
 				const user = userCredential.user;
-				console.log("User logged in successfully");
 				fetchUserData(user.uid);
 			})
 			.catch((error) => {
 				const errorCode = error.code;
-				console.log(error.message);
 			});
 	};
 	return (

@@ -34,7 +34,6 @@ const AddProduct = () => {
 			img: imgUrl,
 			quantity: Number(quantity),
 		});
-		console.log("Document written with ID: ", docRef.id);
 		setLoading(false);
 		navigate("/products");
 	}
@@ -51,14 +50,12 @@ const AddProduct = () => {
 			.then((snapshot) => {
 				getDownloadURL(snapshot.ref).then((url) => {
 					setImgUrl(url);
-					console.log("uploaded image");
 					setUploadSuccessful(true);
 					setUploading(false);
 				});
 			})
 			.catch((error) => {
 				alert("There was an error uploading the file. Please try again !");
-				console.log("Error occured : ", error);
 				setUploading(false);
 			});
 	}
