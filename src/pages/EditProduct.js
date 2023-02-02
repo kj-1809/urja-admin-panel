@@ -71,7 +71,7 @@ const EditProduct = () => {
 			productName: productName,
 			price: Number(price),
 			discount: Number(discount),
-			img: imgUrl,
+			img: imgUrl ? imgUrl : currentImg,
 			quantity: Number(quantity),
 		});
 		setLoading(false);
