@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./EditUser.css";
-import TextInput from "../components/TextInput";
 import TextInputMod from "../components/TextInputMod";
 import { useParams } from "react-router-dom";
 import {
@@ -35,25 +34,33 @@ const EditUser = () => {
 
 	async function handleDelete() {
 		setLoading(true);
-		await deleteDoc(doc(db, "users", docId));
+		try{
+			await deleteDoc(doc(db, "users", docId));
+		}catch(err){
+			alert(`some error occured : ${err}`)
+		}
 		setLoading(false);
 		navigate("/users");
 	}
 
 	async function handleSubmit() {
 		setLoading(true);
-		await updateDoc(doc(db, "users", docId), {
-			name: name,
-			phone: phone,
-			gstin: gstin,
-			email: email,
-			uid: userId,
-			address: address,
-			disc5: Number(discount5kg),
-			disc47: Number(discount47kg),
-			disc19: Number(discount19kg),
-			disc430: Number(discount430kg),
-		});
+		try {
+			await updateDoc(doc(db, "users", docId), {
+				name: name,
+				phone: phone,
+				gstin: gstin,
+				email: email,
+				uid: userId,
+				address: address,
+				disc5: Number(discount5kg),
+				disc47: Number(discount47kg),
+				disc19: Number(discount19kg),
+				disc430: Number(discount430kg),
+			});
+		}catch(err){
+			alert(`some error occured : ${err}`)
+		}
 		setLoading(false);
 		navigate("/users");
 	}

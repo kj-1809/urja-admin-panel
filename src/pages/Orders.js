@@ -9,14 +9,12 @@ import {
 	query,
 	updateDoc,
 	doc,
-	getDoc,
 	where,
 	increment,
 	deleteDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import axios from "axios";
-import CustomAlert from "../components/CustomAlert";
 import CustomModal from "../components/CustomModal";
 
 const Orders = () => {
@@ -38,7 +36,11 @@ const Orders = () => {
 			return;
 		}
 		setLoading(true);
-		await deleteDoc(doc(db, "orders", tbdDocId));
+		try {
+			await deleteDoc(doc(db, "orders", tbdDocId));
+		}catch(err){
+			alert(`some error occured : ${err}`)
+		}
 		setTbdDocId(undefined);
 		setLoading(false);
 		handleModalClose();
@@ -76,9 +78,13 @@ const Orders = () => {
 	};
 
 	const updateInventory = async (productDocId, currentQuantity) => {
-		await updateDoc(doc(db, "products", productDocId), {
-			quantity: increment(currentQuantity * -1),
-		});
+		try{
+			await updateDoc(doc(db, "products", productDocId), {
+				quantity: increment(Number(currentQuantity * -1)),
+			});
+		}catch(err){
+			alert(`some error occured : ${err}`)
+		}
 		setLoading(false);
 	};
 
@@ -145,9 +151,13 @@ const Orders = () => {
 							onClick={async () => {
 								setLoading(true);
 								// update order status
-								await updateDoc(doc(db, "orders", params.row.docId), {
-									orderStatus: "Fulfilled",
-								});
+								try{
+									await updateDoc(doc(db, "orders", params.row.docId), {
+										orderStatus: "Fulfilled",
+									});
+								}catch(err){
+									alert(`some error occured : ${err}`)
+								}
 
 								//update inventory
 								const qu = query(

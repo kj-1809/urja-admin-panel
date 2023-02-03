@@ -26,14 +26,18 @@ const AddProduct = () => {
 
 	async function handleSubmit() {
 		setLoading(true);
-		const docRef = await addDoc(collection(db, "products"), {
-			productId: Number(productId),
-			productName: productName,
-			price: Number(price),
-			discount: Number(discount),
-			img: imgUrl,
-			quantity: Number(quantity),
-		});
+		try {
+			const docRef = await addDoc(collection(db, "products"), {
+				productId: Number(productId),
+				productName: productName,
+				price: Number(price),
+				discount: Number(discount),
+				img: imgUrl,
+				quantity: Number(quantity),
+			});
+		}catch(err){
+			alert(`some error occured : ${err}`)
+		}
 		setLoading(false);
 		navigate("/products");
 	}

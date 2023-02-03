@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./EditProduct.css";
-import TextInput from "../components/TextInput";
 import TextInputMod from "../components/TextInputMod";
-import { Navigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
 	collection,
 	query,
@@ -38,7 +37,11 @@ const EditProduct = () => {
 
 	async function handleDelete() {
 		setLoading(true);
-		await deleteDoc(doc(db, "products", docId));
+		try{
+			await deleteDoc(doc(db, "products", docId));
+		}catch(err){
+			alert(`some error occured : ${err}`)
+		}
 		setLoading(false);
 		navigate("/products");
 	}
@@ -50,6 +53,7 @@ const EditProduct = () => {
 		}
 		setUploading(true);
 		const imgRef = ref(storage, `images/${uploadFile.name + v4()}`);
+		//upload image to firebase storage
 		uploadBytes(imgRef, uploadFile)
 			.then((snapshot) => {
 				getDownloadURL(snapshot.ref).then((url) => {
@@ -66,14 +70,18 @@ const EditProduct = () => {
 
 	async function handleSubmit() {
 		setLoading(true);
-		await updateDoc(doc(db, "products", docId), {
-			productId: Number(productId),
-			productName: productName,
-			price: Number(price),
-			discount: Number(discount),
-			img: imgUrl ? imgUrl : currentImg,
-			quantity: Number(quantity),
-		});
+		try {
+			await updateDoc(doc(db, "products", docId), {
+				productId: Number(productId),
+				productName: productName,
+				price: Number(price),
+				discount: Number(discount),
+				img: imgUrl ? imgUrl : currentImg,
+				quantity: Number(quantity),
+			});
+		}catch(err){
+			alert(`some error occured : ${err}`)
+		}
 		setLoading(false);
 		navigate("/products");
 	}
@@ -86,7 +94,6 @@ const EditProduct = () => {
 		);
 		const querySnapshot = await getDocs(q);
 		querySnapshot.forEach((doc) => {
-			// doc.data() is never undefined for query doc snapshots
 			setDocId(doc.id);
 			setProductData(doc.data());
 		});
