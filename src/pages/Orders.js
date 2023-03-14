@@ -12,6 +12,7 @@ import {
 	where,
 	increment,
 	deleteDoc,
+	writeBatch,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import axios from "axios";
@@ -38,8 +39,8 @@ const Orders = () => {
 		setLoading(true);
 		try {
 			await deleteDoc(doc(db, "orders", tbdDocId));
-		}catch(err){
-			alert(`some error occured : ${err}`)
+		} catch (err) {
+			alert(`some error occured : ${err}`);
 		}
 		setTbdDocId(undefined);
 		setLoading(false);
@@ -72,20 +73,8 @@ const Orders = () => {
 		};
 		axios
 			.request(options)
-			.then((res) => {
-			})
+			.then((res) => {})
 			.catch((err) => alert(err));
-	};
-
-	const updateInventory = async (productDocId, currentQuantity) => {
-		try{
-			await updateDoc(doc(db, "products", productDocId), {
-				quantity: increment(Number(currentQuantity * -1)),
-			});
-		}catch(err){
-			alert(`some error occured : ${err}`)
-		}
-		setLoading(false);
 	};
 
 	const columns = [
@@ -151,23 +140,37 @@ const Orders = () => {
 							onClick={async () => {
 								setLoading(true);
 								// update order status
-								try{
-									await updateDoc(doc(db, "orders", params.row.docId), {
-										orderStatus: "Fulfilled",
-									});
-								}catch(err){
-									alert(`some error occured : ${err}`)
-								}
-
-								//update inventory
-								const qu = query(
-									collection(db, "products"),
-									where("productId", "==", params.row.productId)
-								);
-								const productQuerySnapshot = await getDocs(qu);
-								productQuerySnapshot.forEach((doc) => {
-									updateInventory(doc.id, params.row.quantity);
+								const batch = writeBatch(db);
+								const orderStatusRef = doc(db, "orders", params.row.docId);
+								batch.update(orderStatusRef, {
+									orderStatus: "Fulfilled",
 								});
+
+								// update inventory
+								const fetchProductDocId = new Promise(async (resolve , reject) => {
+									const qu = query(
+										collection(db, "products"),
+										where("productId", "==", params.row.productId)
+									);
+									const productQuerySnapshot = await getDocs(qu);
+									productQuerySnapshot.forEach((doc) => {
+										resolve(doc.id);
+									});
+								})	
+
+								const productDocumentId = await fetchProductDocId;
+
+								const inventoryRef = doc(db, "products", productDocumentId);
+								batch.update(inventoryRef, {
+									quantity: increment(Number(params.row.quantity * -1)),
+								});
+								
+								// push changes in a batch
+								try {
+									batch.commit();
+								} catch (err) {
+									console.log(err);
+								}
 
 								//Send message to the user
 								const userPhoneNumber = await getUserPhoneNumber(
@@ -180,6 +183,8 @@ const Orders = () => {
 									params.row.quantity,
 									params.row.price
 								);
+
+								setLoading(false);
 								setReload(!reload);
 							}}
 						>
