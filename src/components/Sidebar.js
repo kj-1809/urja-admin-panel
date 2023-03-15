@@ -1,10 +1,20 @@
 import React from "react";
-import { BsBoxSeam, BsCart, BsFillPeopleFill } from "react-icons/bs";
+import { BsBoxSeam, BsCart, BsFillPeopleFill,BsDoorOpen } from "react-icons/bs";
 import { BiHome } from "react-icons/bi";
 import "./Sidebar.css";
 import { Link } from "react-router-dom";
-
+import {auth} from "../firebase"
+import { signOut } from "firebase/auth";
 export const Sidebar = () => {
+
+	const handleSignOut = () => {
+		signOut(auth).then(() => {
+			console.log("Sign Out successful")
+		}).catch((error) => {
+			alert("Some error occurred !" , error)
+		})
+	}
+
 	return (
 		<div className="sidebar">
 			<div className="imageContainer">
@@ -36,6 +46,10 @@ export const Sidebar = () => {
 						<span className="sidebarItemText">Users</span>
 					</div>
 				</Link>
+				<div className="sidebarItemContainer" onClick = {handleSignOut}>
+					<BsDoorOpen />
+					<span className="sidebarItemText">Sign Out</span>
+				</div>
 			</div>
 		</div>
 	);
