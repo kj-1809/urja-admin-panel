@@ -4,4 +4,24 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height : 100vh;
+}
+.loginCard {
+  height: 70vh;
+  width: 30vw;
+  min-width: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 40px;
+  /* box-shadow: 5px 5px 5px 5px #888888; */
+  box-shadow: 10px 10px 50px 10px rgb(253 , 111 , 0) inset;
+
+}
+.loginInputContainer {
+  margin-top: 30px;
+}
+.loginButtonContainer {
+  margin-top: 20px;
 }

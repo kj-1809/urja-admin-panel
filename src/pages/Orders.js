@@ -58,23 +58,27 @@ const Orders = () => {
 		return userPhoneNumber;
 	};
 
-	const sendMessage = (phoneNumber, orderNumber, itemName, quantity, price) => {
+	const sendMessage = (phoneNumber, itemName, price) => {
 		const options = {
 			method: "POST",
-			url: `https://urja-proxy-api-production.up.railway.app/api/send/`,
+			url: "https://urja-proxy-api-production.up.railway.app/api/send",
 			params: {
 				phone: phoneNumber,
-				order_number: orderNumber,
 				item_name: itemName,
-				quantity: quantity,
 				price: price,
 				type: "orderdelivered",
 			},
 		};
 		axios
 			.request(options)
-			.then((res) => {})
-			.catch((err) => alert(err));
+			.then((response) => {
+				console.log("Status : ", response.status);
+				console.log("Message sent from the server!");
+			})
+			.catch((error) => {
+				console.log("error while sending the message")
+				console.error(error);
+			});	
 	};
 
 	const columns = [
@@ -178,9 +182,7 @@ const Orders = () => {
 								);
 								sendMessage(
 									userPhoneNumber,
-									params.row.orderId,
 									params.row.productName,
-									params.row.quantity,
 									params.row.price
 								);
 
