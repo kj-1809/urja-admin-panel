@@ -10,16 +10,20 @@ import EditUser from "./pages/EditUser";
 import Login from "./pages/Login";
 import Layout from "./components/Layout";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useAuth } from "./context/AuthContext";
-
+import { useContext } from "react";
+import { AuthContext } from "./context/AuthContext";
 function App() {
-	const isAdmin = useAuth();
+
+	const ctx = useContext(AuthContext)
+
+	
+
 
 	function RequireAuth(props) {
-		return isAdmin ? props.children : <Navigate to="/login" />;
+		return (ctx.isAdmin && ctx.currentUser) ? props.children : <Navigate to="/login" />;
 	}
 	function RequireAuthRev(props) {
-		return !isAdmin ? props.children : <Navigate to="/" />;
+		return !(ctx.isAdmin && ctx.currentUser) ? props.children : <Navigate to="/" />;
 	}
 
 	return (

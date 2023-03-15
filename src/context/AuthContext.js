@@ -1,40 +1,49 @@
-import React , {useContext , useState , createContext, useEffect} from 'react'
+import { createContext, useState, useEffect } from "react";
+import LinearIndeterminate from "../components/LinearIndeterminate";
 
-const AuthContext = createContext()
-const AuthUpdateContext = createContext()
+import { auth, db } from "../firebase";
+import { query , collection , where , getDocs } from "firebase/firestore";
+const AuthContext = createContext({
+	currentUser: null,
+	isAdmin: false,
+});
 
-export function useAuth(){
-  return useContext(AuthContext)
-}
-export function useUpdateAuth(){
-  return useContext(AuthUpdateContext)
-}
+const AuthContextProvider = ({ children }) => {
+	const [currentUser, setCurrentUser] = useState(null);
+	const [isAdmin, setIsAdmin] = useState(false);
+	const [pending, setPending] = useState(true);
 
-export function AuthProvider({children}){
+	useEffect(() => {
+		auth.onAuthStateChanged(async (user) => {
+			setCurrentUser(user);
+			if (user) {
+				const q = query(collection(db, "users"), where("uid", "==", user.uid));
+				const querySnapshot = await getDocs(q);
+				let foundAdmin = false;
+				querySnapshot.forEach((doc) => {
+					if (doc.data().isAdmin) {
+						foundAdmin = true;
+					}
+				});
+				if (foundAdmin) {
+					setIsAdmin(true);
+				}
+			} else {
+				setIsAdmin(false);
+			}
+      setPending(false);
+		});
+	}, []);
 
-  let cachedValue = localStorage.getItem("isAdmin")
-  if(!cachedValue){
-      cachedValue = false
-  }else{
-    cachedValue = (cachedValue === 'true')
-  }
+	if (pending) {
+		return <LinearIndeterminate />;
+	}
 
-  const [isAdmin , setIsAdmin] = useState(cachedValue)
-  
-  useEffect(()=>{
-    localStorage.setItem("isAdmin" , isAdmin)
-  } , [isAdmin])
+	return (
+		<AuthContext.Provider value={{ currentUser, isAdmin }}>
+			{children}
+		</AuthContext.Provider>
+	);
+};
 
-  function changeAuthState(currentAuthState){
-    setIsAdmin(currentAuthState)
-  }
-
-  return (
-    <AuthContext.Provider value = {isAdmin}>
-      <AuthUpdateContext.Provider value = {changeAuthState}>
-        {children}
-      </AuthUpdateContext.Provider>
-    </AuthContext.Provider>
-  )
-}
-
+export {AuthContext , AuthContextProvider};
