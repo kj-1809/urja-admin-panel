@@ -12,7 +12,7 @@ const AuthContextProvider = ({ children }) => {
 	const [currentUser, setCurrentUser] = useState(null);
 	const [isAdmin, setIsAdmin] = useState(false);
 	const [pending, setPending] = useState(true);
-
+	
 	useEffect(() => {
 		auth.onAuthStateChanged(async (user) => {
 			setCurrentUser(user);

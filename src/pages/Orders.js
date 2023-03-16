@@ -85,24 +85,24 @@ const Orders = () => {
 		{
 			field: "createdAt",
 			headerName: "Time",
-			flex: 1.7,
+			flex: 1.8,
 			renderCell: (params) => {
 				const seconds = params.row.createdAt.seconds;
 				const currentTime = new Date(seconds * 1000);
 				const options = {
 					year: "numeric",
-					month: "short",
+					month: "numeric",
 					day: "numeric",
 					hour: "numeric",
 					minute: "numeric",
 					second: "numeric",
 				};
-				return <span>{currentTime.toLocaleString("en-GB", options)}</span>;
+				return <span>{currentTime.toLocaleString("en-US", options)}</span>;
 			},
 		},
 		{ field: "orderId", headerName: "Order ID", flex: 0.8 },
-		{ field: "productName", headerName: "Product Name", flex: 1.5 },
-		{ field: "quantity", headerName: "Quantity", flex: 0.7 },
+		{ field: "productName", headerName: "Product Name", flex: 1.6 },
+		{ field: "quantity", headerName: "Quantity", flex: 0.6 },
 		{
 			field: "price",
 			headerName: "Price",
