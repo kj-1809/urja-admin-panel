@@ -13,6 +13,7 @@ import {
 	deleteDoc,
 	writeBatch,
 	limit,
+	serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import axios from "axios";
@@ -221,13 +222,19 @@ const Orders = () => {
 			usersMap[doc.data().uid] = doc.data().name;
 		});
 		setUsersHash(usersMap);
-		console.log(usersMap);
 		return usersMap;
 	}
 
 	async function fetchOrders() {
 		setFetching(true);
-		const q = query(collection(db, "orders"), orderBy("createdAt", "desc"));
+		const threeMonths = new Date(
+			new Date().getTime() - 90 * 24 * 60 * 60 * 1000
+		);
+		const q = query(
+			collection(db, "orders"),
+			orderBy("createdAt", "desc"),
+			where("createdAt", ">=", threeMonths) 
+		);
 		const querySnapshot = await getDocs(q);
 		let arr = [];
 		querySnapshot.forEach((doc) => {
@@ -236,18 +243,17 @@ const Orders = () => {
 			arr.push(tempObj);
 		});
 		const usersMap = await fetchUsers();
-		const updatedOrders = mergeUsersAndOrders(usersMap , arr);
-		console.log("updated orders : " , updatedOrders)
-		setOrders(updatedOrders)
+		const updatedOrders = mergeUsersAndOrders(usersMap, arr);
+		setOrders(updatedOrders);
 		setFetching(false);
 	}
-	function mergeUsersAndOrders(usersMap , orders){
-		let mergedArr = []
-		for(let i = 0 ; i < orders.length ; i++){
-			const obj = structuredClone(orders[i])
-			obj["username"] = usersMap[orders[i].uid]
-			mergedArr.push(obj)
-		}		
+	function mergeUsersAndOrders(usersMap, orders) {
+		let mergedArr = [];
+		for (let i = 0; i < orders.length; i++) {
+			const obj = structuredClone(orders[i]);
+			obj["username"] = usersMap[orders[i].uid];
+			mergedArr.push(obj);
+		}
 		return mergedArr;
 	}
 
