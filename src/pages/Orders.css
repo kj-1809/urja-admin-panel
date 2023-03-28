@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   height : 650px;
-  margin : 5vh 4vw 0 4vw;
+  margin : 5vh 1vw 0 1vw;
 }
 
 .statusTag{
@@ -37,7 +37,7 @@
 }
 
 .headingContainerOrders{
-  margin-left: 4vw;
+  margin-left: 1vw;
 	margin-right: 4vw;
 	display: flex;
 	align-items: center;

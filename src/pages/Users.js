@@ -8,33 +8,33 @@ import { db } from "../firebase";
 import LinearIndeterminate from "../components/LinearIndeterminate"
 
 const columns = [
-	{ field: "name", headerName: "Name", flex: 1 },
-	{ field: "phone", headerName: "Phone", flex: 1 },
+	{ field: "name", headerName: "Name", flex: 2 },
+	{ field: "phone", headerName: "Phone", flex: 1.5 },
 	{ field: "gstin", headerName: "GSTIN", flex: 2 },
 	{
 		field: "disc5",
-		headerName: "Discount 5KG",
-		flex: 1.1,
+		headerName: "Disc. 5KG",
+		flex: 1,
 	},
 	{
 		field: "disc19",
-		headerName: "Discount 19KG",
-		flex: 1.2,
+		headerName: "Disc. 19KG",
+		flex: 1,
 	},
 	{
 		field: "disc47",
-		headerName: "Discount 47KG",
-		flex: 1.2,
+		headerName: "Disc. 47KG",
+		flex: 1,
 	},
 	{
 		field: "disc430",
-		headerName: "Discount 430KG",
-		flex: 1.2,
+		headerName: "Disc. 430KG",
+		flex: 1,
 	},
 	{
 		field: "actions",
 		headerName: "Actions",
-		flex: 0.8,
+		flex: 1,
 		renderCell: (params) => {
 			return (
 				<div>

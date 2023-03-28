@@ -9,8 +9,8 @@ import LinearIndeterminate from "../components/LinearIndeterminate";
 import CustomAlert from "../components/CustomAlert";
 
 const columns = [
-	{ field: "productId", headerName: "Product ID", flex: 1 },
-	{ field: "productName", headerName: "Product Name", flex: 2 },
+	{ field: "productId", headerName: "Product ID", flex: 0.8 },
+	{ field: "productName", headerName: "Product Name", flex: 2.5 },
 	{ field: "price", headerName: "Price", flex: 1 },
 	{
 		field: "discount",

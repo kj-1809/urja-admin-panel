@@ -7,12 +7,12 @@ import {
 	getDocs,
 	orderBy,
 	query,
-	updateDoc,
 	doc,
 	where,
 	increment,
 	deleteDoc,
 	writeBatch,
+	limit,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import axios from "axios";
@@ -25,6 +25,7 @@ const Orders = () => {
 	const [loading, setLoading] = useState(false);
 	const [openModal, setOpenModal] = useState(false);
 	const [tbdDocId, setTbdDocId] = useState(undefined);
+	const [usersHash, setUsersHash] = useState({});
 
 	const handleModalClose = () => {
 		setOpenModal(false);
@@ -76,9 +77,9 @@ const Orders = () => {
 				console.log("Message sent from the server!");
 			})
 			.catch((error) => {
-				console.log("error while sending the message")
+				console.log("error while sending the message");
 				console.error(error);
-			});	
+			});
 	};
 
 	const columns = [
@@ -102,7 +103,12 @@ const Orders = () => {
 		},
 		{ field: "orderId", headerName: "Order ID", flex: 0.8 },
 		{ field: "productName", headerName: "Product Name", flex: 1.6 },
-		{ field: "quantity", headerName: "Quantity", flex: 0.6 },
+		{
+			field: "username",
+			headerName: "Customer",
+			flex: 1.6,
+		},
+		{ field: "quantity", headerName: "Qty.", flex: 0.6 },
 		{
 			field: "price",
 			headerName: "Price",
@@ -121,7 +127,7 @@ const Orders = () => {
 		},
 		{
 			field: "orderStatus",
-			headerName: "Order Status",
+			headerName: "Status",
 			flex: 1,
 			renderCell: (params) => {
 				return (
@@ -151,16 +157,18 @@ const Orders = () => {
 								});
 
 								// update inventory
-								const fetchProductDocId = new Promise(async (resolve , reject) => {
-									const qu = query(
-										collection(db, "products"),
-										where("productId", "==", params.row.productId)
-									);
-									const productQuerySnapshot = await getDocs(qu);
-									productQuerySnapshot.forEach((doc) => {
-										resolve(doc.id);
-									});
-								})	
+								const fetchProductDocId = new Promise(
+									async (resolve, reject) => {
+										const qu = query(
+											collection(db, "products"),
+											where("productId", "==", params.row.productId)
+										);
+										const productQuerySnapshot = await getDocs(qu);
+										productQuerySnapshot.forEach((doc) => {
+											resolve(doc.id);
+										});
+									}
+								);
 
 								const productDocumentId = await fetchProductDocId;
 
@@ -168,7 +176,7 @@ const Orders = () => {
 								batch.update(inventoryRef, {
 									quantity: increment(Number(params.row.quantity * -1)),
 								});
-								
+
 								// push changes in a batch
 								try {
 									batch.commit();
@@ -206,6 +214,16 @@ const Orders = () => {
 			},
 		},
 	];
+	async function fetchUsers() {
+		const querySnapshot = await getDocs(collection(db, "users"));
+		let usersMap = {};
+		querySnapshot.forEach((doc) => {
+			usersMap[doc.data().uid] = doc.data().name;
+		});
+		setUsersHash(usersMap);
+		console.log(usersMap);
+		return usersMap;
+	}
 
 	async function fetchOrders() {
 		setFetching(true);
@@ -213,13 +231,24 @@ const Orders = () => {
 		const querySnapshot = await getDocs(q);
 		let arr = [];
 		querySnapshot.forEach((doc) => {
-			// doc.data() is never undefined for query doc snapshots
 			let tempObj = doc.data();
 			tempObj["docId"] = doc.id;
 			arr.push(tempObj);
 		});
-		setOrders(arr);
+		const usersMap = await fetchUsers();
+		const updatedOrders = mergeUsersAndOrders(usersMap , arr);
+		console.log("updated orders : " , updatedOrders)
+		setOrders(updatedOrders)
 		setFetching(false);
+	}
+	function mergeUsersAndOrders(usersMap , orders){
+		let mergedArr = []
+		for(let i = 0 ; i < orders.length ; i++){
+			const obj = structuredClone(orders[i])
+			obj["username"] = usersMap[orders[i].uid]
+			mergedArr.push(obj)
+		}		
+		return mergedArr;
 	}
 
 	useEffect(() => {
@@ -254,6 +283,18 @@ const Orders = () => {
 						rowsPerPageOptions={[10]}
 						key={orders.orderId}
 						getRowId={(row) => row.orderId}
+						getRowHeight={() => "auto"}
+						sx={{
+							"&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell": {
+								py: "8px",
+							},
+							"&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell": {
+								py: "8px",
+							},
+							"&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell": {
+								py: "8px",
+							},
+						}}
 					/>
 				</div>
 			</div>
