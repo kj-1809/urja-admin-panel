@@ -11,6 +11,7 @@ const TextInputMod = (props) => {
 					className="inputField"
 					onChange={props.onChange}
 					value={props.value}
+					disabled = {props.disabled}
 				/>
 			</div>
 		</div>

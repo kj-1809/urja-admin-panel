@@ -111,6 +111,7 @@ const EditUser = () => {
 						placeholder="Name"
 						value={name}
 						onChange={(e) => setName(e.target.value)}
+						disabled = {true}
 					/>
 					<TextInputMod
 						placeholder="Phone"
@@ -126,11 +127,13 @@ const EditUser = () => {
 						placeholder="Email"
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
+						disabled = {true}
 					/>
 					<TextInputMod
 						placeholder="UserID"
 						value={userId}
 						onChange={(e) => setUserId(e.target.value)}
+						disabled = {true}
 					/>
 					<TextInputMod
 						placeholder="Address"
