@@ -11,7 +11,7 @@ import {
 	updateDoc,
 	deleteDoc,
 } from "firebase/firestore";
-import { db, auth } from "../firebase";
+import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import LinearIndeterminate from "../components/LinearIndeterminate";
 

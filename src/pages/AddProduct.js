@@ -1,6 +1,5 @@
 import React from "react";
 import "./AddProduct.css";
-import TextInput from "../components/TextInput";
 import TextInputMod from "../components/TextInputMod";
 import { collection, addDoc } from "firebase/firestore";
 import { useState } from "react";

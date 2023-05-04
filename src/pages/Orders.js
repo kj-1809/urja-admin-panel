@@ -12,8 +12,6 @@ import {
 	increment,
 	deleteDoc,
 	writeBatch,
-	limit,
-	serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import axios from "axios";
@@ -63,7 +61,7 @@ const Orders = () => {
 	const sendMessage = (phoneNumber, itemName, price) => {
 		const options = {
 			method: "POST",
-			url: "https://urja-proxy-api-production.up.railway.app/api/send",
+			url: "https://urjas-bharat-gas-api.cyclic.app/api/send",
 			params: {
 				phone: phoneNumber,
 				item_name: itemName,
